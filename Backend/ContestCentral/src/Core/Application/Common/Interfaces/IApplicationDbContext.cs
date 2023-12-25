@@ -1,4 +1,4 @@
-namespace ContestCentral.Application.Interfaces;
+namespace ContestCentral.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
