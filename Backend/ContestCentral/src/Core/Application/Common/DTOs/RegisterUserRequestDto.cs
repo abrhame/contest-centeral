@@ -1,3 +1,5 @@
+namespace ContestCentral.Application.Common.DTOs;
+
 public record RegisterUserRequestDto {
     public required string UserName; 
     public required string FirstName;

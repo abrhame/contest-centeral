@@ -1,8 +1,11 @@
-using ContestCentral.Application.Common
+using ContestCentral.Application.Common.DTOs;
+using ContestCentral.Application.Common.Models;
+
+namespace ContestCentral.Application.Common.Interfaces; 
 
 public interface IAuthServices {
-    Task<AuthResponse> RegisterAsync(RegisterRequest request);
-    Task<AuthResponse> LoginAsync(LoginRequest request);
-    Task<AuthResponse> RefreshTokenAsync(string token);
+    Task<(Result, string)> RegisterAsync(RegisterUserRequestDto request);
+    Task<(Result, string)> LoginAsync(LoginUserRequestDto request);
+    Task<(Result, string)> RefreshTokenAsync(string token);
     Task<bool> RevokeTokenAsync(string token);
 }
