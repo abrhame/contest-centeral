@@ -1,6 +1,5 @@
 namespace ContestCentral.Application.Common.Interfaces;
 
-public interface IApplicationDbContext
-{
+public interface IContestCentralDbContext {
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
