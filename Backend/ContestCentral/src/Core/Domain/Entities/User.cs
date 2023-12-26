@@ -7,7 +7,7 @@ public class User : BaseEntity<Guid> {
     public string LastName { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    public DateTime EmailVerified { get; set; } = DateTime.UtcNow;
+    public DateTime? EmailVerified { get; set; } = null!;
     public string AvatarUrl { get; set; } = string.Empty;
     public string Bio { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
