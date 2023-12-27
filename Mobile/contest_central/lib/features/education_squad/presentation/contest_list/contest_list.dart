@@ -1,16 +1,9 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_table/table_sticky_headers.dart';
-
-import '../../../../../../../../core/utils/circle_image.dart';
-import '../../../../../../../../core/utils/img.dart';
-import '../../../../../../../../core/utils/my_colors.dart';
-import '../../../../../../../../core/utils/my_text.dart';
-import '../contest_add/add_contest.dart';
+import 'package:horizontal_data_table/horizontal_data_table.dart';
+import '../contest_stats/contest_detail.dart';
 import '../contest_stats/floating_action.dart';
-import 'table.dart';
 
 class ContestList extends StatefulWidget {
   const ContestList({super.key});
@@ -21,235 +14,207 @@ class ContestList extends StatefulWidget {
 
 class _ContestListState extends State<ContestList> {
   late int showingTooltip;
+  final TextEditingController _searchController = TextEditingController();
+  late ScrollController verticalScrollController;
+  // late ScrollController _horizontalScrollController;
+  bool _showFab = true;
 
   @override
   void initState() {
     showingTooltip = -1;
     super.initState();
+
+    verticalScrollController = ScrollController();
   }
 
-  final TextEditingController _searchController = TextEditingController();
+  final int rowsCount = 50; // Number of rows in the table
+  final int columnsCount = 5; // Number of columns in the table
 
-// table
-  final columns = 10;
-  final rows = 20;
-
-  List<List<String>> makeData() {
-    final List<List<String>> output = [];
-    for (int i = 0; i < columns; i++) {
-      final List<String> row = [];
-      for (int j = 0; j < rows; j++) {
-        row.add('L$j : T$i');
-      }
-      output.add(row);
-    }
-    return output;
-  }
-
-  /// Simple generator for column title
-  List<String> makeTitleColumn() => List.generate(columns, (i) => 'Top $i');
-
-  /// Simple generator for row title
-  List<String> makeTitleRow() => List.generate(rows, (i) => 'Left $i');
-
-  int _selectedIndex = 0;
-
-  bool _showFab = true;
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark));
     const duration = Duration(milliseconds: 300);
-    return Scaffold(
-        backgroundColor: const Color(0xffF8FAFF),
-        body: NotificationListener<UserScrollNotification>(
-          onNotification: (notification) {
-            final ScrollDirection direction = notification.direction;
-            setState(() {
-              if (direction == ScrollDirection.reverse) {
-                _showFab = false;
-              } else if (direction == ScrollDirection.forward) {
-                _showFab = true;
-              }
-            });
-            return true;
-          },
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarBrightness: Brightness.light,
-                ),
-                backgroundColor: const Color(0xffF8FAFF),
-                floating: true,
-                pinned: false,
-                snap: false,
-                title: Row(
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: Image.asset('assets/images/outline.png',
-                                    width: 24, height: 24)),
 
-                            // text
-                            Container(width: 5),
-                            Text(
-                              "/ Contest",
-                              style: MyText.body2(context)?.copyWith(
-                                color: MyColors.grey_60,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+    return Scaffold(
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          backgroundColor:
+              Colors.white, // Set the AppBar background to transparent
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              size: 24,
+              color: Color.fromARGB(255, 120, 116, 134),
+            ),
+          ),
+          title: const SizedBox(
+            width: 130,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  Icons.corporate_fare,
+                  size: 20,
+                  color: Color.fromARGB(255, 87, 88, 91),
                 ),
-                leading: Row(
-                  children: [
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    // ios arrow back icon button,
-                    GestureDetector(
-                      onTap: () {
-                        // go back
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(Icons.arrow_back_ios,
-                          color: MyColors.grey_60),
-                    )
-                  ],
+                Text(
+                  "/",
+                  style: TextStyle(
+                      fontSize: 20, color: Color.fromARGB(255, 209, 213, 219)),
                 ),
-                actions: <Widget>[
-                  CircleImage(
-                    imageProvider: AssetImage(Img.get('image 1.png')),
-                    size: 40,
-                  ),
-                  Container(width: 10),
-                  const Icon(Icons.keyboard_arrow_down,
-                      color: MyColors.grey_60),
-                ],
+                Text(
+                  "Contests",
+                  style: TextStyle(
+                      fontSize: 20, color: Color.fromARGB(255, 107, 114, 128)),
+                )
+              ],
+            ),
+          ),
+          actions: const [
+            Icon(
+              Icons.notifications_outlined,
+              color: Color.fromARGB(255, 120, 116, 134),
+            ),
+            SizedBox(
+              width: 7,
+            ),
+            CircleAvatar(
+              radius: 15.0,
+              backgroundImage: NetworkImage(
+                  'https://th.bing.com/th/id/R.0f36a9b7563d5a0787b5661ce63f3ee8?rik=cJxNXWv6Gt5s8g&riu=http%3a%2f%2fadvantagebodylanguage.com%2fwp-content%2fuploads%2f2015%2f12%2fgewoman.jpg&ehk=nR1PFEO%2fHz1YZ3XLQsKWjtU3Ga%2boY%2f4NzLcCMXB3uYU%3d&risl=&pid=ImgRaw&r=0'),
+            ),
+            //  SizedBox(width:2,),
+            Icon(
+              Icons.expand_more,
+              color: Color.fromARGB(255, 41, 45, 50),
+            ),
+            SizedBox(
+              width: 20,
+            )
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 16,
               ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 16.0),
-                      Center(
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(
+                            color: const Color.fromARGB(255, 212, 212, 212)),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(5.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                border: Border.all(
-                                    color: const Color.fromARGB(
-                                        255, 212, 212, 212)),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Icon(Icons.delete, color: Colors.grey),
-                                    Text("Delete ",
-                                        style: TextStyle(color: Colors.grey)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 16.0),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6.0),
-                                border: Border.all(
-                                    color: const Color.fromARGB(
-                                        255, 212, 212, 212)),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Icon(Icons.tune, color: Colors.grey),
-                                    Text("Filter ",
-                                        style: TextStyle(color: Colors.grey)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 16.0),
-                            SizedBox(
-                              width: 110,
-                              height: 40,
-                              child: TextFormField(
-                                controller: _searchController,
-                                decoration: const InputDecoration(
-                                  hintText: 'Search ',
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xffDFE2E6),
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0),
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xffDFE2E6),
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(30.0),
-                                    ),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Color(0xffDFE2E6),
-                                  ),
-                                  hintStyle: TextStyle(
-                                    color: Color(0xffDFE2E6),
-                                    // Adjust the top padding as needed
-                                    height:
-                                        1.5, // Increase this value to add more top padding
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical:
-                                          1.0), // Adjust the vertical padding as needed
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 16.0),
-                            StickyHeadersTable(
-                              columnsLength: 5,
-                              rowsLength: 20,
-                              columnsTitleBuilder: (i) => Text("Test"),
-                              rowsTitleBuilder: (i) => Text("Test2"),
-                              contentCellBuilder: (i, j) => Text("data[i][j]"),
-                              legendCell: Text('Sticky Legend'),
-                            ),
+                            Icon(Icons.delete, color: Colors.grey),
+                            Text("Delete ",
+                                style: TextStyle(color: Colors.grey)),
                           ],
                         ),
                       ),
-                    ],
-                  );
-                }, childCount: 1),
-              )
+                    ),
+                    const SizedBox(width: 16.0),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6.0),
+                        border: Border.all(
+                            color: const Color.fromARGB(255, 212, 212, 212)),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(Icons.tune, color: Colors.grey),
+                            Text("Filter ",
+                                style: TextStyle(color: Colors.grey)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16.0),
+                    SizedBox(
+                      width: 140,
+                      height: 37,
+                      child: TextFormField(
+                        controller: _searchController,
+                        decoration: const InputDecoration(
+                          hintText: 'Search ',
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xffDFE2E6),
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.0),
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xffDFE2E6),
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(30.0),
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Color(0xffDFE2E6),
+                          ),
+                          hintStyle: TextStyle(
+                            color: Color(0xffDFE2E6),
+                            // Adjust the top padding as needed
+                            height:
+                                1.5, // Increase this value to add more top padding
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical:
+                                  1.0), // Adjust the vertical padding as needed
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 18, right: 15),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: HorizontalDataTable(
+                    leftHandSideColumnWidth:
+                        130, // Set width for the fixed column
+                    rightHandSideColumnWidth: 100.0 *
+                        columnsCount, // Adjust width for the remaining columns
+                    isFixedHeader: true,
+                    headerWidgets:
+                        _buildHeaderWidgets(), // Custom header widgets
+                    leftSideItemBuilder:
+                        _buildFixedColumn, // Builds the fixed column
+                    rightSideItemBuilder:
+                        _buildScrollableColumns, // Builds the scrollable columns
+                    itemCount: rowsCount,
+                    rowSeparatorWidget: const Divider(color: Colors.grey),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -260,5 +225,83 @@ class _ContestListState extends State<ContestList> {
                 duration: duration,
                 opacity: _showFab ? 1 : 0,
                 child: buildSpeedDial(context))));
+  }
+
+  // Build the header widgets for the table
+  List<Widget> _buildHeaderWidgets() {
+    List<String> titles = [
+      "Contest Name",
+      "Questions",
+      "Status",
+      "Attempts",
+      "Date"
+    ];
+    return [
+      for (var i = 0; i < columnsCount; i++)
+        Container(
+          width: 110,
+          height: 35.0,
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 5.0,
+            ),
+            child: Text(
+              " ${titles[i]}",
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 107, 104, 104),
+              ),
+            ),
+          ),
+        ),
+    ];
+  }
+
+  // Builds the fixed column
+  Widget _buildFixedColumn(BuildContext context, int index) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const ContestDetail(),
+          ),
+        );
+      },
+      child: Container(
+        width: 150, // Set width for the fixed column
+        height: 35.0,
+        alignment: Alignment.center,
+        child: Text(
+          'Weekly Contest ${index + 1}',
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color.fromARGB(255, 107, 104, 104),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Builds the scrollable columns
+  Widget _buildScrollableColumns(BuildContext context, int index) {
+    return Row(
+      children: [
+        for (var i = 0; i < columnsCount; i++)
+          Container(
+            width: 100.0, // Adjust the width of the scrollable columns
+            height: 35.0,
+            alignment: Alignment.center,
+            child: Text(
+              'Data ${index + 1}-${i + 2}',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color.fromARGB(255, 107, 104, 104),
+              ),
+            ),
+          ),
+      ],
+    );
   }
 }

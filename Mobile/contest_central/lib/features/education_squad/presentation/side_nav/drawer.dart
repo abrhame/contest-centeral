@@ -65,7 +65,7 @@ class _EndDrawersState extends State<EndDrawers> {
               Navigator.pop(context);
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const ContestDetail(),
+                  builder: (context) => const ContestList(),
                 ),
               );
             },
