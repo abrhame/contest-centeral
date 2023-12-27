@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace ContestCentral.Application.Common.Interfaces;
 
-namespace ContestCentral.Application.Persistence.Contracts
-{
-    public interface IGenericRepository<T> where T : class
-    {
-        Task<T> GetById(Guid id);
-        Task<List<T>> GetAll();
-        Guid Add(T entity);
-        Task Update(T entity);
-        void Delete(T entity);
-       
-    }
+public interface IGenericRepository<T> where T : class {
+    Task<T?> GetAsync(Guid id);
+    Task<IReadOnlyList<T>> GetAllAsync();
+    Task<T> AddAsync(T entity);
+    Task<bool> ExistsAsync(Guid id);
+    Task UpdateAsync(T entity);
+    Task DeleteAsync(T entity); 
 }
