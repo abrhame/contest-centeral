@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 
 class Lists extends StatefulWidget {
@@ -95,10 +94,10 @@ class _ListsState extends State<Lists> {
                     fillColor: Colors.white,
                     borderColor: Colors.white,
                   ),
-                  child: SizedBox(
+                  child: const SizedBox(
                     width: 95,
                     height: 50,
-                    child: const Center(
+                    child: Center(
                       child: Text(
                         '', // Add content for the new parallelogram
                         style: TextStyle(
