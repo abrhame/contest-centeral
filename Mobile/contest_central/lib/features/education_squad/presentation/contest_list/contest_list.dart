@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
+
 import '../contest_stats/contest_detail.dart';
 import '../contest_stats/floating_action.dart';
 
@@ -100,122 +100,127 @@ class _ContestListState extends State<ContestList> {
           ],
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 16,
-              ),
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(
-                            color: const Color.fromARGB(255, 212, 212, 212)),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(Icons.delete, color: Colors.grey),
-                            Text("Delete ",
-                                style: TextStyle(color: Colors.grey)),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16.0),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(6.0),
-                        border: Border.all(
-                            color: const Color.fromARGB(255, 212, 212, 212)),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(Icons.tune, color: Colors.grey),
-                            Text("Filter ",
-                                style: TextStyle(color: Colors.grey)),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16.0),
-                    SizedBox(
-                      width: 140,
-                      height: 37,
-                      child: TextFormField(
-                        controller: _searchController,
-                        decoration: const InputDecoration(
-                          hintText: 'Search ',
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0xffDFE2E6),
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0xffDFE2E6),
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(30.0),
-                            ),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Color(0xffDFE2E6),
-                          ),
-                          hintStyle: TextStyle(
-                            color: Color(0xffDFE2E6),
-                            // Adjust the top padding as needed
-                            height:
-                                1.5, // Increase this value to add more top padding
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical:
-                                  1.0), // Adjust the vertical padding as needed
-                        ),
-                      ),
-                    ),
-                  ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 16,
                 ),
-              ),
-              const SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.only(left: 18, right: 15),
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  child: HorizontalDataTable(
-                    leftHandSideColumnWidth:
-                        130, // Set width for the fixed column
-                    rightHandSideColumnWidth: 100.0 *
-                        columnsCount, // Adjust width for the remaining columns
-                    isFixedHeader: true,
-                    headerWidgets:
-                        _buildHeaderWidgets(), // Custom header widgets
-                    leftSideItemBuilder:
-                        _buildFixedColumn, // Builds the fixed column
-                    rightSideItemBuilder:
-                        _buildScrollableColumns, // Builds the scrollable columns
-                    itemCount: rowsCount,
-                    rowSeparatorWidget: const Divider(color: Colors.grey),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(
+                              color: const Color.fromARGB(255, 212, 212, 212)),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Icon(Icons.text_rotate_vertical,
+                                  color: Colors.grey),
+                              Text(" Sort ",
+                                  style: TextStyle(color: Colors.grey)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16.0),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6.0),
+                          border: Border.all(
+                              color: const Color.fromARGB(255, 212, 212, 212)),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Icon(Icons.tune, color: Colors.grey),
+                              Text("Filter ",
+                                  style: TextStyle(color: Colors.grey)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16.0),
+                      Expanded(
+                        child: SizedBox(
+                          height: 37,
+                          child: TextFormField(
+                            controller: _searchController,
+                            decoration: const InputDecoration(
+                              hintText: 'Search ',
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffDFE2E6),
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(16.0),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffDFE2E6),
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(30.0),
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Color(0xffDFE2E6),
+                              ),
+                              hintStyle: TextStyle(
+                                color: Color(0xffDFE2E6),
+                                // Adjust the top padding as needed
+                                height:
+                                    1.5, // Increase this value to add more top padding
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical:
+                                      1.0), // Adjust the vertical padding as needed
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 16.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 1, right: 1),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    child: HorizontalDataTable(
+                      leftHandSideColumnWidth:
+                          MediaQuery.of(context).size.width * 0.5,
+                      rightHandSideColumnWidth: 100.0 *
+                          columnsCount, // Adjust width for the remaining columns
+                      isFixedHeader: true,
+                      headerWidgets:
+                          _buildHeaderWidgets(), // Custom header widgets
+                      leftSideItemBuilder:
+                          _buildFixedColumn, // Builds the fixed column
+                      rightSideItemBuilder:
+                          _buildScrollableColumns, // Builds the scrollable columns
+                      itemCount: rowsCount,
+                      rowSeparatorWidget: const Divider(color: Colors.grey),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton: AnimatedSlide(
@@ -251,7 +256,7 @@ class _ContestListState extends State<ContestList> {
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 107, 104, 104),
+                color: Color.fromARGB(255, 48, 48, 48),
               ),
             ),
           ),
@@ -270,15 +275,27 @@ class _ContestListState extends State<ContestList> {
         );
       },
       child: Container(
-        width: 150, // Set width for the fixed column
+        width: 160, // Set width for the fixed column
         height: 35.0,
         alignment: Alignment.center,
-        child: Text(
-          'Weekly Contest ${index + 1}',
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color.fromARGB(255, 107, 104, 104),
-          ),
+        child: Row(
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Icon(
+                Icons.check_circle_outline,
+                color: Color.fromARGB(207, 76, 175, 79),
+                size: 24,
+              ),
+            ),
+            Text(
+              'Weekly Contest ${index + 1}',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color.fromARGB(255, 33, 33, 33),
+              ),
+            ),
+          ],
         ),
       ),
     );

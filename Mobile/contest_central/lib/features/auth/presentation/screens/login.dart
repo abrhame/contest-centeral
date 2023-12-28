@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../../education_squad/presentation/dashboard/home.dart';
 // import '../../../education_squad/presentation/dashboard/home_screen.dart';
 
@@ -114,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 3),
               // ----- OR ----- text with divider
               const Padding(

@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 
 Widget CardWidget(BuildContext context, IconData icon, String title,
-    String value, Color color) {
+    String value, Color color, Color iconColor) {
   return ClipRRect(
     borderRadius: BorderRadius.circular(9),
     child: Padding(
@@ -29,21 +29,20 @@ Widget CardWidget(BuildContext context, IconData icon, String title,
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(
-                          0xffE9EDFA), // Change the color of the circle background
-                      boxShadow: [
+                      color: color, // Change the color of the circle background
+                      boxShadow: const [
                         BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 1,
+                          color: Color.fromARGB(62, 0, 0, 0),
+                          blurRadius: 5,
                           offset: Offset(0, 4),
                         ),
                       ],
                     ),
                     padding: const EdgeInsets.all(8),
                     child: Icon(icon,
-                        color: color // Change the color of the chart icon
+                        color: iconColor // Change the color of the chart icon
                         ),
                   ),
                 ),
