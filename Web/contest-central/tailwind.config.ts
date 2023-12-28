@@ -34,6 +34,7 @@ const config: Config = {
         },
         'primaryGray': {
           50: '#CBD5E0',
+          100: '#F6F6F9',
           200: '#787486',
           300: '#6C6C77',
           400: '#666666',
