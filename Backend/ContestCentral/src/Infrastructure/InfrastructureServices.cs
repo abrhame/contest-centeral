@@ -10,33 +10,35 @@ using ContestCentral.Infrastructure.Persistence;
 using ContestCentral.Application.Common.Interfaces;
 using ContestCentral.Infrastructure.SecurityServices;
 using ContestCentral.Infrastructure.Tokens;
+using ContestCentral.Infrastructure.Email;
+using ContestCentral.Infrastructure.Auth;
 using ContestCentral.Infrastructure.Persistence.Repositories;
 
 namespace ContestCentral.Infrastructure;
 
 public static class InfrastructureServices {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration) {
+        services.AddRepositories(configuration);
         services.AddPersistenceServices(configuration);
         services.AddEmailServices(configuration);
         services.AddAuthenticationServices(configuration);
         services.AddSecurityServices(configuration);
-        services.AddRepositories(configuration);
 
         return services;
     }
-
-    private static IServiceCollection AddSecurityServices(this IServiceCollection services, IConfiguration configuration) {
-        services.AddScoped<IPasswordServices, PasswordService>();
-
-        return services;
-    }
-
 
     private static IServiceCollection AddRepositories(this IServiceCollection services, IConfiguration configuration) {
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IEmailConfirmationRepository, EmailConfirmationRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddSecurityServices(this IServiceCollection services, IConfiguration configuration) {
+        services.AddScoped<IPasswordServices, PasswordService>();
 
         return services;
     }
@@ -56,6 +58,14 @@ public static class InfrastructureServices {
     }
 
     private static IServiceCollection AddEmailServices(this IServiceCollection services, IConfiguration configuration) {
+        var emailSettings = new EmailSettings();
+
+        configuration.Bind(emailSettings.SectionName, emailSettings);
+
+        services.AddSingleton(Options.Create(emailSettings));
+
+        services.AddTransient<IEmailService, EmailService>();
+
         return services;
     }
 
@@ -66,9 +76,16 @@ public static class InfrastructureServices {
 
         services.AddSingleton(Options.Create(tokenSettings));
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAuthService, AuthServices>();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.AddAuthentication(
+                options => {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options => {
+                options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters {
                     ValidateIssuer = true,
                     ValidateAudience = true,

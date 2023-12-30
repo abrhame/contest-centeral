@@ -5,6 +5,7 @@ namespace ContestCentral.Infrastructure.Persistence.Repositories;
 public class UnitOfWork : IUnitOfWork {
     private readonly ContestCentralDbContext _context;
     private UserRepository? _userRepository;
+    private EmailConfirmationRepository? _emailConfirmationRepository;
 
     public UnitOfWork(ContestCentralDbContext context) {
         _context = context;
@@ -14,6 +15,7 @@ public class UnitOfWork : IUnitOfWork {
         await _context.SaveChangesAsync(cancellationToken);
     }
 
+    public IEmailConfirmationRepository EmailConfirmationRepository => _emailConfirmationRepository ??= new EmailConfirmationRepository(_context);
     public IUserRepository UserRepository => _userRepository ??= new UserRepository(_context);
 
     public void Dispose() {

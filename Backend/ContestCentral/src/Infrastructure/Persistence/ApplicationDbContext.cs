@@ -10,6 +10,7 @@ public class ContestCentralDbContext : DbContext, IContestCentralDbContext {
     public ContestCentralDbContext(DbContextOptions<ContestCentralDbContext> options) : base(options) {}
 
     public required DbSet<User> Users { get; set; } 
+    public required DbSet<EmailConfirmation> EmailConfirmations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

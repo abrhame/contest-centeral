@@ -4,5 +4,7 @@ namespace ContestCentral.Application.Common.Interfaces;
 
 public interface ITokenService {
     public string GenerateAccessToken(User user);
-    public (Guid, string) GenerateRefreshToken();
+    public string GenerateRefreshToken();
+    public string GenerateConfirmationToken(User user);
+    public string ValidateToken(string token);
 }

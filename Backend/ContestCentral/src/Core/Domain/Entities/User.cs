@@ -15,5 +15,8 @@ public class User : BaseEntity<Guid> {
     public Role Role { get; set; } = Role.Student;
     
     public string PasswordHash { get; set; } = string.Empty;
+
+    public string accessToken { get; set; } = string.Empty;
+    public string refreshToken { get; set; } = string.Empty;
 }
 

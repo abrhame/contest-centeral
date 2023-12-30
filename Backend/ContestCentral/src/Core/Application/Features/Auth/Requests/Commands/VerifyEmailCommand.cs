@@ -5,4 +5,4 @@ using ContestCentral.Application.Common.Models;
 
 namespace ContestCentral.Application.Features.Auth.Requests;
 
-public record VerifyEmailCommand( string token ) : IRequest<(Result, AuthResponseDto)>;
+public record VerifyEmailCommand( string token, Guid userId ) : IRequest<(Result, AuthResponseDto?)>;
