@@ -1,7 +1,8 @@
-namespace ContestCentral.Domain.Constants;
+namespace Domain.Constant;
 
-public enum Role {
-    Student, 
+public enum Role
+{
+    Student,
     HeadOfEducation,
     ContestCreator,
     Administrator
