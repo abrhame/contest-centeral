@@ -1,9 +1,9 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
-using System.Security.Cryptography;
 
 using ContestCentral.Application.Common.Interfaces;
 using ContestCentral.Domain.Common.Entity;
@@ -31,7 +31,6 @@ public class TokenService : ITokenService {
 					new Claim(JwtRegisteredClaimNames.Iat, DateTime.UnixEpoch.ToString(), ClaimValueTypes.Integer64), 
 					new Claim(ClaimTypes.NameIdentifier, user.UserName),
 					new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
-					new Claim(ClaimTypes.Email, user.Email),
 					new Claim(ClaimTypes.Role, user.Role.ToString()),
 				}
 			),
@@ -50,7 +49,7 @@ public class TokenService : ITokenService {
 		return tokenHandler.WriteToken(token);
 	}
 
-	public string GenerateRefreshToken() {
+	public (Guid, string) GenerateRefreshToken() {
 		var tokenId = Guid.NewGuid();
 		var tokenHandler = new JwtSecurityTokenHandler();
 		var tokenDescriptor = new SecurityTokenDescriptor {
@@ -65,38 +64,40 @@ public class TokenService : ITokenService {
 		};
 
 		var token = tokenHandler.CreateToken(tokenDescriptor);
-		return tokenHandler.WriteToken(token);
+		return (tokenId, tokenHandler.WriteToken(token));
 	}
 
-	public string GenerateConfirmationToken(User user) {
-		var descriptor = DateTime.UnixEpoch + user.Email + user.GetHashCode();
-		var hash = new HMACSHA256(Encoding.UTF8.GetBytes(descriptor));
-
-		return Convert.ToBase64String(hash.ComputeHash(Encoding.UTF8.GetBytes(user.Email)));
-	}
-
-	public string ValidateToken(string token) {
+	public Guid? ValidateToken(string refreshtoken, out Guid tokenId) {
 		var tokenHandler = new JwtSecurityTokenHandler();
-		var key = _tokenSecret;
 
-		tokenHandler.ValidateToken(token, new TokenValidationParameters {
+		var tokenValidationParams = new TokenValidationParameters {
 			ValidateIssuerSigningKey = true,
-			IssuerSigningKey = new SymmetricSecurityKey(key),
+			IssuerSigningKey = new SymmetricSecurityKey(_tokenSecret),
 			ValidateIssuer = true,
 			ValidateAudience = true,
-			ValidIssuer = _issuer,
+			ClockSkew = TimeSpan.Zero,
 			ValidAudience = _audience,
-			ValidateLifetime = true,
-		}, out SecurityToken validatedToken);
+			ValidIssuer = _issuer,
+		};
 
-		if ( !(validatedToken is JwtSecurityToken jwtToken) || !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase) ) {
-			throw new SecurityTokenException("Invalid token");
+		try {
+			tokenHandler.ValidateToken(refreshtoken, tokenValidationParams, out SecurityToken token);
+			var jwt = (JwtSecurityToken)token;
+			var valid = Guid.TryParse(jwt.Id, out var id);
+			tokenId = id;
+			var accountId = jwt.Claims.First(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
+			return Guid.Parse(accountId);
 		}
-
-		if ( jwtToken.ValidTo < DateTime.UtcNow ) {
-			throw new SecurityTokenException("Token expired");
+		catch (Exception) {
+			tokenId = default;
+			return null;
 		}
+	}
 
-		return jwtToken.Claims.First(x => x.Type == "jti").Value;
+	public string GenerateVerificationToken(User user) {
+		var randomVal = user.Id.ToString() + user.Email + user.UserName + user.FirstName + user.LastName;
+		var userHash = Convert.ToHexString(Encoding.ASCII.GetBytes(randomVal)) + Guid.NewGuid().ToString() + DateTime.UnixEpoch.ToString();
+		var token = SHA256.HashData(Encoding.ASCII.GetBytes(userHash));
+		return Convert.ToHexString(token);
 	}
 }

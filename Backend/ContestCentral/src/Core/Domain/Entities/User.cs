@@ -7,7 +7,6 @@ public class User : BaseEntity<Guid> {
     public string LastName { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    public DateTime? EmailVerified { get; set; } = null!;
     public string AvatarUrl { get; set; } = string.Empty;
     public string Bio { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
@@ -16,7 +15,13 @@ public class User : BaseEntity<Guid> {
     
     public string PasswordHash { get; set; } = string.Empty;
 
-    public string accessToken { get; set; } = string.Empty;
-    public string refreshToken { get; set; } = string.Empty;
+    public string VerificationToken { get; set; } = string.Empty;
+    public DateTime? Verified { get; set; }
+    public bool IsVerified => Verified.HasValue || PasswordReset.HasValue;
+    public string ResetToken { get; set; } = string.Empty;
+    public DateTime? ResetTokenExpires { get; set; }
+    public DateTime? PasswordReset { get; set; }
+
+    public RefreshToken? RefreshToken { get; set; }
 }
 

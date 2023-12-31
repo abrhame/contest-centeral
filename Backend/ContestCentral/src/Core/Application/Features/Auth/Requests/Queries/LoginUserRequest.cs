@@ -5,4 +5,4 @@ using ContestCentral.Application.Common.Models;
 
 namespace ContestCentral.Application.Features.Auth.Requests;
 
-public record LoginUserRequest ( string Email, string Password ) : IRequest<(Result, AuthResponseDto?)>;
+public record LoginUserRequest (LoginUserRequestDto RequestDto) : IRequest<(Result, AuthResponseDto?)>;

@@ -32,7 +32,7 @@ public static class InfrastructureServices {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IEmailConfirmationRepository, EmailConfirmationRepository>();
+        services.AddScoped<ITokenRepository, TokenRepository>();
 
         return services;
     }
@@ -50,6 +50,7 @@ public static class InfrastructureServices {
             services.AddDbContext<ContestCentralDbContext>(options =>
                     options.UseNpgsql(DbConnectionString, b => 
                         b.MigrationsAssembly(typeof(ContestCentralDbContext).Assembly.FullName)));
+                    
 
             services.AddScoped<IContestCentralDbContext>(provider => provider.GetRequiredService<ContestCentralDbContext>());
         }
@@ -95,7 +96,8 @@ public static class InfrastructureServices {
                     ValidAudience = tokenSettings.Audience, 
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Secret)),
                 };
-            });
+            })
+            ;
 
         return services;
     }

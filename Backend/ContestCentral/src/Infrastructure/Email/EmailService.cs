@@ -20,7 +20,7 @@ public class EmailService : IEmailService {
         _logger = logger;
     }
 
-    public async Task<Result> SendEmailAsync(string address, string subject, string body) {
+    public async Task<Result> SendEmailAsync(string address, string subject, string body, string? fromAddress = null) {
         try {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_emailSettings.DefaultFromEmail));
@@ -40,7 +40,7 @@ public class EmailService : IEmailService {
         }
     }
 
-    public Task<Result> SendBatchEmailAsync(IEnumerable<string> addresses, string subject, string body) {
+    public Task<Result> SendBatchEmailAsync(IEnumerable<string> addresses, string subject, string body, string? fromAddress = null) {
         throw new NotImplementedException();
     }
 }

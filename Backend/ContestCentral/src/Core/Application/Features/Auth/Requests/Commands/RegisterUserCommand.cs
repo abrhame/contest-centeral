@@ -1,8 +1,8 @@
 using MediatR;
 
 using ContestCentral.Application.Common.Models;
-using ContestCentral.Domain.Constants;
+using ContestCentral.Application.Common.DTOs;
 
 namespace ContestCentral.Application.Features.Auth.Requests;
 
-public record RegisterUserCommand ( string UserName, string FirstName, string LastName, string Email, string Password, Role Role, string PhoneNumber) : IRequest<Result>;
+public record RegisterUserCommand ( RegisterUserRequestDto requestDto ) : IRequest<Result>;

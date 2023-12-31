@@ -6,5 +6,6 @@ using AutoMapper;
 public class MappingProfile : Profile {
     public MappingProfile() {
         CreateMap<User, UserDto>().ReverseMap();
+        CreateMap<User, RegisterUserRequestDto>().ReverseMap();
     }
 }

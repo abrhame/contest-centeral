@@ -18,4 +18,16 @@ public class UserRepository : GenericRepository<User>, IUserRepository {
     public async Task<User?> GetUserByUserNameAsync(string userName) {
         return await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
     }
+
+    public async Task<User?> GetUserByCode(string code) {
+        return await _context.Users.FirstOrDefaultAsync(u => u.VerificationToken == code);
+    }
+
+    public async Task<User?> GetUserByResetToken(string token) {
+        return await _context.Users.FirstOrDefaultAsync(u => u.ResetToken == token);
+    }
+
+    public async Task<User?> GetUserByRefreshToken(string token) {
+        return await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken != null && (u.RefreshToken.Token == token));
+    }
 }
