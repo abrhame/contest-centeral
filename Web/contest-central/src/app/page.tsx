@@ -1,5 +1,5 @@
-import NavBar from "./_components/NavBar";
-import Sidebar from "./_components/SideBar";
+// import NavBar from "./_components/NavBar";
+// import Sidebar from "./_components/SideBar";
 
 export default function Home() {
   return (
