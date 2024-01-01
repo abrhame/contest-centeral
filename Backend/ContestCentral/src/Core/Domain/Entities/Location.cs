@@ -8,5 +8,7 @@ public class Location : BaseEntity<Guid>
     public string Country { get; set; } = string.Empty;
     public string University { get; set; } = string.Empty;
 
+    public string ShortName { get; set; } = string.Empty;
+
     public ICollection<Group> Groups { get; set; } = new List<Group>();
 }

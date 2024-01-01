@@ -295,6 +295,12 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Avatar")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -305,7 +311,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("EmailVerified")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("FristName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -326,11 +332,53 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("VerificationId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Verification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("VerificationType")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Verifications");
                 });
 
             modelBuilder.Entity("QuestionTags", b =>
@@ -476,6 +524,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Group");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Verification", b =>
+                {
+                    b.HasOne("Domain.Entity.User", "User")
+                        .WithOne("Verification")
+                        .HasForeignKey("Domain.Entity.Verification", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("QuestionTags", b =>
                 {
                     b.HasOne("Domain.Entity.Question", null)
@@ -534,6 +593,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.User", b =>
                 {
                     b.Navigation("Submissions");
+
+                    b.Navigation("Verification");
                 });
 #pragma warning restore 612, 618
         }

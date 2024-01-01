@@ -20,6 +20,8 @@ public class ContestCentralDbContext : DbContext, IContestCentralDbContext {
     public required DbSet<Location> Locations { get; set; }
     public required DbSet<Tags> Tags { get; set; }
 
+    public required DbSet<Verification> Verifications { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);

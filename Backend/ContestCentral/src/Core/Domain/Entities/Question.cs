@@ -2,9 +2,9 @@ using Domain.Common;
 
 namespace Domain.Entity;
 
-public class Question : BaseEntity<int> 
+public class Question : BaseEntity<string> 
 {
-    public int AskedAmount { get; set; }
+    public int AskedCount { get; set; }
     public string Title { get; set; } = string.Empty;
     public int Rating { get; set; }
 

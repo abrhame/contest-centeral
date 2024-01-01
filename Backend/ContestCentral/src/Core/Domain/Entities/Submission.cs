@@ -4,10 +4,11 @@ namespace Domain.Entity;
 
 public class Submission : BaseEntity<Guid>
 {
-    public int QuestionId { get; set; }
+    public string QuestionId { get; set; } = default!;
     public Question Question { get; set; } = null!;
 
     public int Attempts { get; set; }
+    public int Points { get; set; }
 
     public Guid? TeamId { get; set; }
     public Team? Team { get; set; }
