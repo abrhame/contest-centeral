@@ -1,57 +1,41 @@
-using AutoMapper;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 
-using ContestCentral.Application.Common.DTOs;
-using ContestCentral.Application.Features.Auth.Requests;
+using Application.DTOs;
+using Application.Features.Auth.Commands;
 
-namespace ContestCentral.Api.Controllers;
+namespace Api.Controllers;
 
-[Route("api/auth")]
-public class AuthController : ControllerBase {
-
+[Route("api/[controller]")]
+[ApiController]
+public class AuthController : ControllerBase 
+{
     private readonly IMediator _mediator;
 
-    public AuthController(IMediator mediator, IMapper mapper){
+    public AuthController(IMediator mediator)
+    {
         _mediator = mediator;
     }
 
-
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterUserRequestDto request) {   
-        var response = await _mediator.Send(new RegisterUserCommand(request));
-
-        if(response.Success) {
-            return CreatedAtAction(nameof(Register), response);
+    public async Task<IActionResult> Register(RegisterUserRequestDto request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
         }
 
-        return BadRequest(response);
-    }
+        var result = await _mediator.Send(new RegisterUserCommand(request));
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginUserRequestDto request) {
-        return Ok();
-    }
-    
-    [HttpGet("verifyemail/{token}")]
-    public async Task<IActionResult> VerifyEmail(string token) {
-        var response = await _mediator.Send(new VerifyEmailCommand(token));
-
-        if (response.Item1.Success) {
-            return Ok(response);
+        if (result.Success)
+        {
+            return CreatedAtAction(nameof(Register), new
+                    {
+                    success = result.Success,
+                    message = result.Message
+                    });
         }
 
-        return BadRequest(response);
-    }
-
-    [HttpPost("forgot-password")]
-    public async Task<IActionResult> ForgotPassword(string email) {
-        var response = await _mediator.Send(new ForgotPasswordRequest(email));
-
-        if (response.Success) {
-            return Ok(response);
-        }
-
-        return BadRequest(response);
+        return BadRequest(result);
     }
 }

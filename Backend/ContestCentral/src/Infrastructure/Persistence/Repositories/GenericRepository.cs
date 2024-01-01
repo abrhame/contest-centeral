@@ -1,44 +1,53 @@
 using Microsoft.EntityFrameworkCore;
 
-using ContestCentral.Application.Common.Interfaces;
+using Application.Interfaces;
 
-namespace ContestCentral.Infrastructure.Persistence.Repositories;
+namespace Infrastructure.Persistence.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : class {
-    private readonly ContestCentralDbContext _dbContext;
+public class GenericRepository<T> : IGenericRepository<T> where T : class
+{
+    private readonly ContestCentralDbContext _context;
 
-    protected GenericRepository(ContestCentralDbContext dbContext) {
-        _dbContext = dbContext;
+    public GenericRepository(ContestCentralDbContext context)
+    {
+        _context = context;
     }
 
-    public async Task<T> AddAsync(T entity) {
-        await _dbContext.AddAsync(entity);
-        await _dbContext.SaveChangesAsync();
+    public async Task<IReadOnlyList<T>> GetPagedResponseAsync (int page, int size)
+    {
+        return await _context.Set<T>().Skip((page - 1) * size).Take(size).ToListAsync();
+    }
+
+    public async Task<T?> GetByIdAsync(Guid id)
+    {
+        return await _context.Set<T>().FindAsync(id);
+    }
+
+    public async Task<IReadOnlyList<T>> GetAllAsync()
+    {
+        return await _context.Set<T>().ToListAsync();
+    }
+
+    public async Task<T> AddAsync(T entity)
+    {
+        await _context.Set<T>().AddAsync(entity);
+        await _context.SaveChangesAsync();
+
         return entity;
     }
 
-    public async Task<bool> ExistsAsync(Guid id) {
-        var entity = await GetAsync(id);
-        return entity != null;
+    public async Task UpdateAsync(T entity)
+    {
+        _context.Entry(entity).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(T entity) {
-        _dbContext.Set<T>().Remove(entity);
-        _dbContext.SaveChangesAsync();
-        return Task.CompletedTask;
-    }
-
-    public async Task<T?> GetAsync(Guid id) {
-        return await _dbContext.Set<T>().FindAsync(id);
-    }
-
-    public async Task<IReadOnlyList<T>> GetAllAsync() {
-        return await _dbContext.Set<T>().ToListAsync();
-    }
-
-    public Task UpdateAsync(T entity) {
-        _dbContext.Entry(entity).State = EntityState.Modified;
-        _dbContext.SaveChangesAsync();
-        return Task.CompletedTask;
+    public async Task DeleteAsync(T entity)
+    {
+        _context.Set<T>().Remove(entity);
+        await _context.SaveChangesAsync();
     }
 }
+
+
+

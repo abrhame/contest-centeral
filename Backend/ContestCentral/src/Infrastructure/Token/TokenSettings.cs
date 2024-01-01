@@ -1,4 +1,4 @@
-namespace ContestCentral.Infrastructure.Tokens;
+namespace Infrastructure.Tokens;
 
 public class TokenSettings{
     public readonly string SectionName = "JwtSettings";
