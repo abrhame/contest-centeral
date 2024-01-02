@@ -20,8 +20,8 @@ class ProfilePolygonRouteState extends State<ProfilePolygonRoute> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              backgroundColor: const Color.fromARGB(255, 61, 61, 63),
-              expandedHeight: 150.0,
+              backgroundColor: Color.fromARGB(255, 61, 61, 63),
+              expandedHeight: 140.0,
               systemOverlayStyle: const SystemUiOverlayStyle(
                   // statusBarColor: Colors.white,
                   statusBarBrightness: Brightness.light),
@@ -55,7 +55,8 @@ class ProfilePolygonRouteState extends State<ProfilePolygonRoute> {
                 )
               ],
               bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(50),
+                preferredSize:
+                    Size.fromHeight(MediaQuery.of(context).size.height * 0.09),
                 child: Container(
                   transform: Matrix4.translationValues(-100, 50, 0),
                   child: CircleAvatar(
