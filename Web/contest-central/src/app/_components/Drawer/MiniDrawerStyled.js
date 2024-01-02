@@ -14,7 +14,7 @@ const openedMixin = (theme) => ({
   }),
   overflowX: 'hidden',
   boxShadow: 'none'
-});
+}); 
 
 const closedMixin = (theme) => ({
   transition: theme.transitions.create('width', {
