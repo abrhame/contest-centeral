@@ -13,6 +13,9 @@ class ProfilePolygonRoute extends StatefulWidget {
 }
 
 class ProfilePolygonRouteState extends State<ProfilePolygonRoute> {
+    bool _oldpassword = true;
+    bool _newpassword = true;
+    bool _confirmpassword = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,6 +205,200 @@ class ProfilePolygonRouteState extends State<ProfilePolygonRoute> {
                   height: 20,
                 ),
                 StatusData(),
+
+                const SizedBox(height: 30,),
+
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Container(
+                    
+                    height: 500,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromRGBO(149, 157, 165, 0.26),
+                        offset: Offset(0, 8),
+                        blurRadius: 6.0,
+                      ),
+                    ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                  
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, top: 25),
+                          child: Text("Change Password", style: TextStyle( 
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(240, 34, 34, 34)),),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 25, top: 35, right: 35),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              
+                              Text("Old Password", style: TextStyle( 
+                                fontSize: 14,
+                              
+                                color: Color.fromARGB(255, 117, 126, 141)),),
+
+                              SizedBox(height: 10,),
+                              
+                              Container(
+                              height: 50,
+                              child: TextField(
+                                cursorColor: Color.fromARGB(255, 102, 102, 102),
+                                obscureText: _oldpassword,
+                                
+                                decoration: InputDecoration(
+                                  filled: true,
+                                    fillColor: Color.fromARGB(100, 203, 213, 224),
+                                    
+                                    suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _oldpassword ? Icons.visibility : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _oldpassword = !_oldpassword;
+                                      });
+                                    },
+                                  ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(18),
+                                        borderSide: BorderSide(
+                                            color: Color.fromARGB(255, 217, 218, 219))),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(18),
+                                      borderSide: BorderSide(
+                                          color: Color.fromARGB(255, 217, 218, 219)),
+                                    )),
+                              ),
+                            ),
+                            SizedBox(height: 25,),
+                            Text("New Password", style: TextStyle( 
+                                fontSize: 14,
+                              
+                                color: Color.fromARGB(255, 117, 126, 141)),),
+
+                              SizedBox(height: 10,),
+                              
+                              Container(
+                              height: 50,
+                              child: TextField(
+                                cursorColor: Color.fromARGB(255, 102, 102, 102),
+                                obscureText: _newpassword,
+                                
+                                decoration: InputDecoration(
+                                  filled: true,
+                                    fillColor: Color.fromARGB(100, 203, 213, 224),
+                                    
+                                    suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _newpassword ? Icons.visibility : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _newpassword = !_newpassword;
+                                      });
+                                    },
+                                  ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(18),
+                                        borderSide: BorderSide(
+                                            color: Color.fromARGB(255, 217, 218, 219))),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(18),
+                                      borderSide: BorderSide(
+                                          color: Color.fromARGB(255, 217, 218, 219)),
+                                    )),
+                              ),
+                            ),
+
+                            SizedBox(height: 25,),
+                            Text("Confirm Password", style: TextStyle( 
+                                fontSize: 14,
+                              
+                                color: Color.fromARGB(255, 117, 126, 141)),),
+
+                              SizedBox(height: 10,),
+                              
+                              Container(
+                              height: 50,
+                              
+                              child: TextField(
+                                cursorColor: Color.fromARGB(255, 102, 102, 102),
+                                obscureText: _confirmpassword,
+                                
+                                decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: Color.fromARGB(100, 203, 213, 224),
+                                    suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _confirmpassword ? Icons.visibility : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _confirmpassword = !_confirmpassword;
+                                      });
+                                    },
+                                  ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(18),
+                                        borderSide: BorderSide(
+                                            color: Color.fromARGB(255, 217, 218, 219))),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(18),
+                                      borderSide: BorderSide(
+                                          color: Color.fromARGB(255, 217, 218, 219)),
+                                    )),
+                              ),
+                            ),
+                            SizedBox(height: 20,),
+                            Center(
+                              child: Container(
+                                  height: 40,
+                                  width: 150,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      // padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15.0),
+                                        // side: BorderSide(color: Colors.blue), // Border color
+                                      ),
+                                      // elevation: 4.0, // Elevation
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 38, 78, 202), // Background color
+                                    ),
+                                    onPressed: () {},
+                                    child: const Text(
+                                      "Reset Password",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                            ),
+                                              
+                            ],
+                          ),
+                        )
+
+                       
+
+                      ],
+                    ),
+                  ),
+                ),
+
+                 SizedBox(
+                          height: 100,),
               ],
             ),
           ),
