@@ -9,12 +9,14 @@ using System.Text;
 using ContestCentral.Infrastructure.Persistence;
 using ContestCentral.Application.Common.Interfaces;
 using ContestCentral.Infrastructure.Tokens;
+using ContestCentral.src.Infrastructure.Persistence.Repositories.AttendanceRepo;
+using ContestCentral.Infrastructure.Persistence.Repositories;
 
 namespace ContestCentral.Infrastructure;
 
 public static class InfrastructureServices {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration) {
-        {
+        
             var DbConnectionString = configuration.GetConnectionString("ContestCentralDbConnection");
 
             services.AddDbContext<ContestCentralDbContext>(options =>
@@ -22,8 +24,12 @@ public static class InfrastructureServices {
                         b.MigrationsAssembly(typeof(ContestCentralDbContext).Assembly.FullName)));
 
             services.AddScoped<IContestCentralDbContext>(provider => provider.GetRequiredService<ContestCentralDbContext>());
-        }
+            services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+            services.AddScoped<ITokenService,TokenService>(); 
+            services.AddScoped<IUnitOfWork,UnitOfWork>();
+            
 
+        
         return services;
     }
 

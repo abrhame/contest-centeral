@@ -7,7 +7,7 @@ using ContestCentral.Application.Features.Auth.Requests;
 
 namespace ContestCentral.Api.Controllers;
 
-[Route("api/auth")]
+[Route("[Controller]")]
 public class AuthController : ControllerBase {
 
     private readonly IMediator _mediator;

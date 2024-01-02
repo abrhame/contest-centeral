@@ -11,6 +11,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddEmailServices(builder.Configuration);
+builder.Services.AddApplicationServices();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 
 var app = builder.Build();
 
@@ -20,6 +24,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//  app.UseCors(cor=> cor
+//            .AllowAnyHeader()
+//            .WithOrigins("http://localhost:5143","https://localhost:4200"));
+
 
 app.UseHttpsRedirection();
 
