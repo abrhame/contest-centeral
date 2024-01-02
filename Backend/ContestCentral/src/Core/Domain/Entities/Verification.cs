@@ -1,0 +1,14 @@
+using Domain.Common;
+
+namespace Domain.Entity;
+
+public class Verification : BaseEntity<int> 
+{
+    public string Token { get; set; } = string.Empty;
+    public DateTime? ExpirationDate { get; set; }
+
+    public VerificationType VerificationType { get; set; }
+
+    public Guid UserId { get; set; }
+    public User User { get; set; } = null!;
+}
