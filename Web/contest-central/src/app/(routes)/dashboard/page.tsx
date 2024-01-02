@@ -16,13 +16,19 @@ const page = () => {
         <TotalCards />
         <TotalCards />
       </div>
-      <div>
-      <div>
+
+      <h2 className='font-bold text-xl pl-10'>Average Contest Conversion</h2>
+      <div className='flex justify-center items-start w-full gap-x-8'>
+      <div className='w-8/12 flex flex-col gap-y-6'>
         <ApexChart />
+        <div className='h-screen bg-black'>
+
+        </div>
       </div>
-      {/* <div>
+      <div className='flex flex-col gap-y-6'>
+        <TopGroups />
         <TopContestants />
-      </div> */}
+      </div>
       </div>
     </div>
   )
