@@ -19,9 +19,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
 
     public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        var validator = new RegisterUserCommandValidator();
-
-        var validationResult = await validator.ValidateAsync(request);
+        var validationResult = await new RegisterUserCommandValidator().ValidateAsync(request);
 
         if (!validationResult.IsValid)
         {

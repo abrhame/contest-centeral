@@ -18,4 +18,9 @@ public class LocationRepository : GenericRepository<Location>, ILocationReposito
     {
         return await _context.Locations.FirstOrDefaultAsync(x => x.ShortName == code);
     }
+
+    public async Task<Location?> GetByUniversityNameAsync(string name)
+    {
+        return await _context.Locations.FirstOrDefaultAsync(x => x.University == name);
+    }
 }

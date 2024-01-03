@@ -13,6 +13,10 @@ public class User : BaseEntity<Guid>
     public DateTime? EmailVerified { get; set; }
     public string PasswordHashed { get; set; } = string.Empty;
 
+    public string? PhoneNumber { get; set; }
+
+    public StudentType StudentType { get; set; } = StudentType.Onsite;
+
     public string? Avatar { get; set; }
     public string? Bio { get; set; }
 

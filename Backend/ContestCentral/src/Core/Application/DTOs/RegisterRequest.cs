@@ -11,4 +11,5 @@ public record RegisterUserRequestDto {
     public string PhoneNumber { get; set; } = string.Empty;
     public Role Role { get; set; } = Role.Student;
     public string GroupShortName { get; set; } = string.Empty;
+    public StudentType StudentType { get; set; } = StudentType.Onsite;
 };

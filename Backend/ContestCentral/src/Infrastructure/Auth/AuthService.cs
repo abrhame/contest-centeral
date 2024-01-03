@@ -51,16 +51,19 @@ public class AuthService : IAuthService
             return Result.FailureResult(new List<string> { "Group not found" });
         }
 
-        var user = new User
+
+        var userExist = await _context.Users.AnyAsync(x => x.Email == request.Email);
+
+
+        if (userExist)
         {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email,
-            UserName = request.Email,
-            PasswordHashed = _passwordService.HashPassword(request.Password),
-            Group = findGroup,
-            Role = request.Role,
-        };
+            _logger.Error($"User with email {request.Email} already exist");
+            return Result.FailureResult(new List<string> { $"User with email {request.Email} already exist" });
+        }
+
+        var user = _mapper.Map<User>(request);
+        user.PasswordHashed = _passwordService.HashPassword(request.Password);
+        user.Group = findGroup;
 
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();

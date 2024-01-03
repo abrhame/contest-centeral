@@ -43,6 +43,7 @@ public static class InfrastructureServices {
 
     private static IServiceCollection AddRepositories(this IServiceCollection services) {
         services.AddScoped<ILogger, Logger>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IContestRepository, ContestRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
