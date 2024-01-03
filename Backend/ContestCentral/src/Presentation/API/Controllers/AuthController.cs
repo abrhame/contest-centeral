@@ -51,5 +51,37 @@ public class AuthController : ControllerBase
 
         return BadRequest(result);
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginUserRequestDto request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var (result, response) = await _mediator.Send(new LoginUserCommand(request));
+
+        if (result.Success)
+        {
+            var cookieOptions = new CookieOptions {
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                Expires = DateTime.UtcNow.AddDays(7),
+                SameSite = SameSiteMode.Strict
+            };
+
+            Response.Cookies.Append("refreshToken", response.RefreshToken, cookieOptions);
+
+            return Ok( new { 
+                    Success = result.Success,
+                    AccessToken = response.AccessToken,
+                    User = response.User,
+                    });
+        }
+
+        return BadRequest(result);
+    }
     
 }

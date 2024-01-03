@@ -40,9 +40,19 @@ public class AuthService : IAuthService
         _unitOfWork = unitOfWork;
     }
 
-    public Task<(Result, User)> LoginAsync(LoginUserRequestDto request)
+    public async Task<(Result, User?)> LoginAsync(LoginUserRequestDto request)
     {
-        throw new NotImplementedException();
+        var user = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
+
+        if ( user == null ) {
+            return (Result.FailureResult(new List<string> { $"User with email {request.Email} not found" }), null);
+        }
+
+        if ( !_passwordService.VerifyPassword(request.Password, user.PasswordHashed) ) {
+            return (Result.FailureResult(new List<string> { $"Invalid Password" }), null);
+        }
+
+        return (Result.SuccessResult("Login Successful"), user);
     }
 
     public async Task<Result> RegisterAsync(RegisterUserRequestDto request)

@@ -1,14 +1,14 @@
 using MediatR;
 
 using Application.Common.Models;
-using Domain.Entity;
 using Application.DTOs;
+using Domain.Entity;
 
 namespace Application.Interfaces;
 
 public interface IAuthService
 {
-    Task<(Result, User)> LoginAsync(LoginUserRequestDto request);
+    Task<(Result, User?)> LoginAsync(LoginUserRequestDto request);
     Task<Result> RegisterAsync(RegisterUserRequestDto request);
     Task<Unit> LogoutAsync();
     Task<Result> VerifyEmailAsync(string code);
