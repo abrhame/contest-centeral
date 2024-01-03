@@ -9,12 +9,12 @@ namespace Application.Features.Auth.Commands.Handler;
 public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Result>
 {
     private readonly IAuthService _authService;
-    private readonly ITokenService _tokenService;
 
-    public RegisterUserCommandHandler(IAuthService authService, ITokenService tokenService)
+    public RegisterUserCommandHandler(
+            IAuthService authService
+           )
     {
         _authService = authService;
-        _tokenService = tokenService;
     }
 
     public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)

@@ -1,13 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDb : Migration
+    public partial class VerificationIdGuid : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,6 +21,7 @@ namespace Infrastructure.Migrations
                     ContestStatus = table.Column<int>(type: "integer", nullable: false),
                     ContestUrl = table.Column<string>(type: "text", nullable: true),
                     ContestDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatorName = table.Column<string>(type: "text", nullable: true),
                     Duration = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -38,7 +38,7 @@ namespace Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     City = table.Column<string>(type: "text", nullable: false),
                     Country = table.Column<string>(type: "text", nullable: false),
-                    University = table.Column<string>(type: "text", nullable: false),
+                    University = table.Column<string>(type: "text", nullable: true),
                     ShortName = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -222,11 +222,12 @@ namespace Infrastructure.Migrations
                     UserName = table.Column<string>(type: "text", nullable: false),
                     EmailVerified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     PasswordHashed = table.Column<string>(type: "text", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    StudentType = table.Column<int>(type: "integer", nullable: false),
                     Avatar = table.Column<string>(type: "text", nullable: true),
                     Bio = table.Column<string>(type: "text", nullable: true),
                     Role = table.Column<int>(type: "integer", nullable: false),
                     GroupId = table.Column<Guid>(type: "uuid", nullable: false),
-                    VerificationId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -334,8 +335,7 @@ namespace Infrastructure.Migrations
                 name: "Verifications",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Token = table.Column<string>(type: "text", nullable: false),
                     ExpirationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     VerificationType = table.Column<int>(type: "integer", nullable: false),
@@ -417,8 +417,7 @@ namespace Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Verifications_UserId",
                 table: "Verifications",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
         }
 
         /// <inheritdoc />

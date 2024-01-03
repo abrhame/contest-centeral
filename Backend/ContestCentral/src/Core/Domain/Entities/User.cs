@@ -28,7 +28,4 @@ public class User : BaseEntity<Guid>
     public ICollection<Team> Teams { get; set; } = new List<Team>();
     public ICollection<Contest> Contests { get; set; } = new List<Contest>();
     public ICollection<Submission> Submissions { get; set; } = new List<Submission>();
-
-    public Guid? VerificationId { get; set; }
-    public Verification? Verification { get; set; }
 }

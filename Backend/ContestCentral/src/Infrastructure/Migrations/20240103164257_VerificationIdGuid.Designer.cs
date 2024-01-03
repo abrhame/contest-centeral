@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ContestCentralDbContext))]
-    [Migration("20240103145646_AddCreatorToContest")]
-    partial class AddCreatorToContest
+    [Migration("20240103164257_VerificationIdGuid")]
+    partial class VerificationIdGuid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -355,9 +355,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("VerificationId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
@@ -367,11 +364,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Verification", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -394,8 +389,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Verifications");
                 });
@@ -546,8 +540,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Verification", b =>
                 {
                     b.HasOne("Domain.Entity.User", "User")
-                        .WithOne("Verification")
-                        .HasForeignKey("Domain.Entity.Verification", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -612,8 +606,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.User", b =>
                 {
                     b.Navigation("Submissions");
-
-                    b.Navigation("Verification");
                 });
 #pragma warning restore 612, 618
         }

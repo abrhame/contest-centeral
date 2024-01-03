@@ -38,5 +38,18 @@ public class AuthController : ControllerBase
 
         return BadRequest(result);
     }
+
+    [HttpGet("verifyemail")]
+    public async Task<IActionResult> VerifyEmail(string token)
+    {
+        var result = await _mediator.Send(new VerifyEmailCommand(token));
+
+        if (result.Success)
+        {
+            return Ok(result);
+        }
+
+        return BadRequest(result);
+    }
     
 }
