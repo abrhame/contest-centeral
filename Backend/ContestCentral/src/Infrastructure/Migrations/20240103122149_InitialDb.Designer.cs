@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ContestCentralDbContext))]
-    [Migration("20231231182114_Initial")]
-    partial class Initial
+    [Migration("20240103122149_InitialDb")]
+    partial class InitialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,8 +45,8 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("ContestsId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("QuestionsId")
-                        .HasColumnType("integer");
+                    b.Property<string>("QuestionsId")
+                        .HasColumnType("text");
 
                     b.HasKey("ContestsId", "QuestionsId");
 
@@ -105,6 +105,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -165,6 +168,10 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("University")
                         .IsRequired()
                         .HasColumnType("text");
@@ -179,13 +186,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Question", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AskedAmount")
+                    b.Property<int>("AskedCount")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
@@ -221,8 +225,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("QuestionId")
+                    b.Property<int>("Points")
                         .HasColumnType("integer");
+
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("TeamId")
                         .HasColumnType("uuid");
@@ -298,6 +306,12 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Avatar")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -308,7 +322,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("EmailVerified")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("FristName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -329,6 +343,13 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("VerificationId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
@@ -336,10 +357,45 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Verification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("VerificationType")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Verifications");
+                });
+
             modelBuilder.Entity("QuestionTags", b =>
                 {
-                    b.Property<int>("QuestionsId")
-                        .HasColumnType("integer");
+                    b.Property<string>("QuestionsId")
+                        .HasColumnType("text");
 
                     b.Property<Guid>("TagsId")
                         .HasColumnType("uuid");
@@ -479,6 +535,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Group");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Verification", b =>
+                {
+                    b.HasOne("Domain.Entity.User", "User")
+                        .WithOne("Verification")
+                        .HasForeignKey("Domain.Entity.Verification", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("QuestionTags", b =>
                 {
                     b.HasOne("Domain.Entity.Question", null)
@@ -537,6 +604,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.User", b =>
                 {
                     b.Navigation("Submissions");
+
+                    b.Navigation("Verification");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,9 +11,6 @@ public class Contest: BaseEntity<Guid>
     public string? ContestUrl { get; set; }
     public DateTime ContestDate { get; set; }
 
-    public Guid? CreatorId { get; set; }
-    public User? Creator { get; set; }
-
     public int Duration { get; set; }
 
     public ICollection<Group> Groups { get; set; } = new List<Group>();

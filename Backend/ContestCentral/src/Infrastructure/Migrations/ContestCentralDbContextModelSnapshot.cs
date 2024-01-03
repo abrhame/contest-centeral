@@ -42,8 +42,8 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("ContestsId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("QuestionsId")
-                        .HasColumnType("integer");
+                    b.Property<string>("QuestionsId")
+                        .HasColumnType("text");
 
                     b.HasKey("ContestsId", "QuestionsId");
 
@@ -102,6 +102,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -162,6 +165,10 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("University")
                         .IsRequired()
                         .HasColumnType("text");
@@ -176,13 +183,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Question", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AskedAmount")
+                    b.Property<int>("AskedCount")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
@@ -218,8 +222,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("QuestionId")
+                    b.Property<int>("Points")
                         .HasColumnType("integer");
+
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("TeamId")
                         .HasColumnType("uuid");
@@ -383,8 +391,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("QuestionTags", b =>
                 {
-                    b.Property<int>("QuestionsId")
-                        .HasColumnType("integer");
+                    b.Property<string>("QuestionsId")
+                        .HasColumnType("text");
 
                     b.Property<Guid>("TagsId")
                         .HasColumnType("uuid");
