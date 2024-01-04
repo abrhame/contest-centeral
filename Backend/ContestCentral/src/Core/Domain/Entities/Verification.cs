@@ -2,7 +2,7 @@ using Domain.Common;
 
 namespace Domain.Entity;
 
-public class Verification : BaseEntity<int> 
+public class Verification : BaseEntity<Guid> 
 {
     public string Token { get; set; } = string.Empty;
     public DateTime? ExpirationDate { get; set; }

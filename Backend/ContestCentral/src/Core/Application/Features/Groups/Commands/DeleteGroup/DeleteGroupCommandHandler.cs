@@ -19,7 +19,14 @@ public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand, Res
 
     public async Task<Result> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
     {
-        await _unitOfWork.GroupRepository.DeleteAsync(request.Group);
+        var group = await _unitOfWork.GroupRepository.GetByIdAsync(request.GroupId);
+
+        if (group is null)
+        {
+            return Result.FailureResult(new List<string> { "Group does not exist" });
+        }
+
+        await _unitOfWork.GroupRepository.DeleteAsync(group);
 
         return Result.SuccessResult("Group deleted successfully");
     }
