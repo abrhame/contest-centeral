@@ -1,9 +1,7 @@
-// using MediatR;
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Application;
-// using ContestCentral.Application.Profiles;
 
 public static class ApplicationServices {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services) {

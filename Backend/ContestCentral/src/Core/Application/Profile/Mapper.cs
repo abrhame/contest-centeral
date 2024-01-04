@@ -10,5 +10,6 @@ public class MappingProfile : Profile {
         CreateMap<Group, GroupDto>().ReverseMap();
         CreateMap<Question, CreateQuestionDto>().ReverseMap();
         CreateMap<Question, GetQuestionByTitleDto>().ReverseMap();
+        CreateMap<Location, LocationDto>().ReverseMap();
     }
 }

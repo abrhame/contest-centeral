@@ -21,6 +21,7 @@ public class ContestCentralDbContext : DbContext, IContestCentralDbContext {
     public required DbSet<Tags> Tags { get; set; }
 
     public required DbSet<Verification> Verifications { get; set; }
+    public required DbSet<Token> Tokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

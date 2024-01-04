@@ -401,7 +401,7 @@ class _ESquadDashBoardState extends State<ESquadDashBoard> {
             showTitles: true,
             interval: 1,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 15,
           ),
         ),
       ),

@@ -103,6 +103,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CreatorName")
+                        .HasColumnType("text");
+                        
                     b.Property<int>("Duration")
                         .HasColumnType("integer");
 
@@ -166,11 +169,16 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ShortName")
+                    
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("University")
+                    
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("University")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -297,6 +305,35 @@ namespace Infrastructure.Migrations
                     b.ToTable("Teams");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Token", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tokens");
+                });
+
             modelBuilder.Entity("Domain.Entity.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -334,7 +371,13 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
                     b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentType")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -343,9 +386,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid?>("VerificationId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -356,11 +396,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.Verification", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -383,8 +421,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Verifications");
                 });
@@ -521,6 +558,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Entity.Token", b =>
+                {
+                    b.HasOne("Domain.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entity.User", b =>
                 {
                     b.HasOne("Domain.Entity.Group", "Group")
@@ -535,8 +583,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.Verification", b =>
                 {
                     b.HasOne("Domain.Entity.User", "User")
-                        .WithOne("Verification")
-                        .HasForeignKey("Domain.Entity.Verification", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -601,8 +649,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entity.User", b =>
                 {
                     b.Navigation("Submissions");
-
-                    b.Navigation("Verification");
                 });
 #pragma warning restore 612, 618
         }

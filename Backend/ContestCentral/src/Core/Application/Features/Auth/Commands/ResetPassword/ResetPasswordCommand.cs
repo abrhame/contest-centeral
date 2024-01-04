@@ -4,4 +4,4 @@ using Application.DTOs;
 
 namespace Application.Features.Auth.Commands;
 
-public record ResetPasswordCommand(ResetPasswordRequestDto Request) : IRequest<Result>;
+public record ResetPasswordCommand(ResetPasswordRequestDto Request, string token) : IRequest<Result>;

@@ -67,7 +67,7 @@ public class TokenService : ITokenService {
 		return (tokenId, tokenHandler.WriteToken(token));
 	}
 
-	public Guid? ValidateToken(string refreshtoken, out Guid tokenId) {
+	public bool ValidateToken(string refreshtoken, out Guid tokenId) {
 		var tokenHandler = new JwtSecurityTokenHandler();
 
 		var tokenValidationParams = new TokenValidationParameters {
@@ -85,12 +85,11 @@ public class TokenService : ITokenService {
 			var jwt = (JwtSecurityToken)token;
 			var valid = Guid.TryParse(jwt.Id, out var id);
 			tokenId = id;
-			var accountId = jwt.Claims.First(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
-			return (Guid.Parse(accountId));
+			return valid;
 		}
 		catch (Exception) {
 			tokenId = default;
-			return null;
+			return false;
 		}
 	}
 
@@ -99,5 +98,31 @@ public class TokenService : ITokenService {
 		var userHash = Convert.ToHexString(Encoding.ASCII.GetBytes(randomVal)) + Guid.NewGuid().ToString() + DateTime.UnixEpoch.ToString();
 		var token = SHA256.HashData(Encoding.ASCII.GetBytes(userHash));
 		return Convert.ToHexString(token);
+	}
+
+	public bool ValidateAccessToken(string accessToken, out Guid userId) {
+		var tokenHandler = new JwtSecurityTokenHandler();
+
+		var tokenValidationParams = new TokenValidationParameters {
+			ValidateIssuerSigningKey = true,
+			IssuerSigningKey = new SymmetricSecurityKey(_tokenSecret),
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			ClockSkew = TimeSpan.Zero,
+			ValidAudience = _audience,
+			ValidIssuer = _issuer,
+		};
+
+		try {
+			tokenHandler.ValidateToken(accessToken, tokenValidationParams, out SecurityToken token);
+			var jwt = (JwtSecurityToken)token;
+			var valid = Guid.TryParse(jwt.Subject, out var id);
+			userId = id;
+			return valid;
+		}
+		catch (Exception) {
+			userId = default;
+			return false;
+		}
 	}
 }

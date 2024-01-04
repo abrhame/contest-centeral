@@ -9,6 +9,9 @@ public class UnitOfWork : IUnitOfWork
     private IGroupRepository? _groupRepository;
     private ILocationRepository? _locationRepository;
     private IContestRepository? _contestRepository;
+    private IVerificationRepository? _verificationRepository;
+    private IUserRepository? _userRepository;
+    private ITokenRepository? _tokenRepository;
 
     public UnitOfWork(ContestCentralDbContext context)
     {
@@ -18,6 +21,9 @@ public class UnitOfWork : IUnitOfWork
     public IGroupRepository GroupRepository => _groupRepository ??= new GroupRepository(_context);
     public ILocationRepository LocationRepository => _locationRepository ??= new LocationRepository(_context);
     public IContestRepository ContestRepository => _contestRepository ??= new ContestRepository(_context);
+    public IVerificationRepository VerificationRepository => _verificationRepository ??= new VerificationRepository(_context);
+    public IUserRepository UserRepository => _userRepository ??= new UserRepository(_context);
+    public ITokenRepository TokenRepository => _tokenRepository ??= new TokenRepository(_context);
 
     public async Task CommitAsync()
     {
