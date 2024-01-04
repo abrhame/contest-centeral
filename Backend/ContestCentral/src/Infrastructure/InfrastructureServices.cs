@@ -29,7 +29,7 @@ public static class InfrastructureServices {
     }
 
     private static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration) {
-        var DbConnectionString = configuration.GetConnectionString("ContestCentralDbConnection");
+        var DbConnectionString = configuration.GetConnectionString("DefaultConnection");
 
         services.AddDbContext<ContestCentralDbContext>(options =>
                 options.UseNpgsql(DbConnectionString, b => 
@@ -46,6 +46,7 @@ public static class InfrastructureServices {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IContestRepository, ContestRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
+        services.AddScoped<IQuestionRepository, QuestionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
