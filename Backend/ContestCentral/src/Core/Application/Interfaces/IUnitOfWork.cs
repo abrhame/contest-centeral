@@ -8,6 +8,7 @@ public interface IUnitOfWork : IDisposable
     IVerificationRepository VerificationRepository { get; }
     IUserRepository UserRepository { get; }
     ITokenRepository TokenRepository { get; }
+    IQuestionRepository QuestionRepository { get; }
 
     Task CommitAsync();
 }

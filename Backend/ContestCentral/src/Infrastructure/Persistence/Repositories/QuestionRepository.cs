@@ -5,16 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories;
 
-public class QuestionRepository : IQuestionRepository
+public class QuestionRepository : GenericRepository<Question>, IQuestionRepository
 {
     private readonly ContestCentralDbContext _dbContext;
     private IMapper _mapper;
 
-    public QuestionRepository(ContestCentralDbContext dbContext,IMapper mapper)
+    public QuestionRepository(ContestCentralDbContext dbContext, IMapper mapper) : base(dbContext)
     {
         _dbContext = dbContext;
         _mapper = mapper;
     }
+
     public async Task<Question> AddQuestion(Question question)
     {
         
@@ -50,7 +51,7 @@ public class QuestionRepository : IQuestionRepository
 
     }
 
-    public async Task<Question> GetQuestionByTitle(string title)
+    public async Task<Question?> GetQuestionByTitle(string title)
     {
          var question = await _dbContext.Questions
             .FirstOrDefaultAsync(q => q.Title == title);
