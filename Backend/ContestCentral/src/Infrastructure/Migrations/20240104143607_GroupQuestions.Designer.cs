@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ContestCentralDbContext))]
-    partial class ContestCentralDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240104143607_GroupQuestions")]
+    partial class GroupQuestions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,7 +108,7 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("CreatorName")
                         .HasColumnType("text");
-                        
+
                     b.Property<int>("Duration")
                         .HasColumnType("integer");
 
@@ -169,12 +172,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ShortName")
-                    
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("University")
-                    
                         .IsRequired()
                         .HasColumnType("text");
 
