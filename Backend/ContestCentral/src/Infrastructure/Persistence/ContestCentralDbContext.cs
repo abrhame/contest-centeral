@@ -5,10 +5,11 @@ using System.Reflection;
 
 namespace Infrastructure.Persistence;
 
-public class ContestCentralDbContext : DbContext, IContestCentralDbContext {
-    public ContestCentralDbContext(DbContextOptions<ContestCentralDbContext> options) : base(options) {}
+public class ContestCentralDbContext : DbContext, IContestCentralDbContext
+{
+    public ContestCentralDbContext(DbContextOptions<ContestCentralDbContext> options) : base(options) { }
 
-    public required DbSet<User> Users { get; set; } 
+    public required DbSet<User> Users { get; set; }
     public required DbSet<Team> Teams { get; set; }
     public required DbSet<Contest> Contests { get; set; }
 
@@ -22,7 +23,8 @@ public class ContestCentralDbContext : DbContext, IContestCentralDbContext {
 
     public required DbSet<Verification> Verifications { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
     }
