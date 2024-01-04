@@ -11,4 +11,5 @@ public class Question : BaseEntity<string>
     public ICollection<Tags> Tags { get; set; } = new List<Tags>();
     public ICollection<Contest> Contests { get; set; } = new List<Contest>();
     public ICollection<Submission> Submissions { get; set; } = new List<Submission>();
+    public ICollection<Group> Groups { get; set; } = new List<Group>();
 }
