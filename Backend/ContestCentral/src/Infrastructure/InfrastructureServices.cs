@@ -45,6 +45,7 @@ public static class InfrastructureServices {
         services.AddScoped<ILogger, Logger>();
         services.AddScoped<IContestRepository, ContestRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
