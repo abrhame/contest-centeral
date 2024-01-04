@@ -1,23 +1,31 @@
-using ContestCentral.Application.Common.Interfaces;
+using Application.Interfaces;
 
-namespace ContestCentral.Infrastructure.Persistence.Repositories;
+namespace Infrastructure.Persistence.Repositories;
 
-public class UnitOfWork : IUnitOfWork {
+public class UnitOfWork : IUnitOfWork
+{
     private readonly ContestCentralDbContext _context;
-    private UserRepository? _userRepository;
 
-    public UnitOfWork(ContestCentralDbContext context) {
+    private IGroupRepository? _groupRepository;
+    private ILocationRepository? _locationRepository;
+    private IContestRepository? _contestRepository;
+
+    public UnitOfWork(ContestCentralDbContext context)
+    {
         _context = context;
     }
 
-    public async Task SaveChangesAsync(CancellationToken cancellationToken = default) {
-        await _context.SaveChangesAsync(cancellationToken);
+    public IGroupRepository GroupRepository => _groupRepository ??= new GroupRepository(_context);
+    public ILocationRepository LocationRepository => _locationRepository ??= new LocationRepository(_context);
+    public IContestRepository ContestRepository => _contestRepository ??= new ContestRepository(_context);
+
+    public async Task CommitAsync()
+    {
+        await _context.SaveChangesAsync();
     }
 
-    public IUserRepository UserRepository => _userRepository ??= new UserRepository(_context);
-
-    public void Dispose() {
+    public void Dispose()
+    {
         _context.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

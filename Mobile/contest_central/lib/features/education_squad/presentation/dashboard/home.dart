@@ -1,11 +1,12 @@
 import 'package:contest_central/core/utils/colors.dart';
 import 'package:contest_central/features/education_squad/presentation/dashboard/card.dart';
-import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
-import '../../../../core/utils/my_colors.dart';
+import '../contest_list/contest_list.dart';
+import '../profile/profile.dart';
 import '../side_nav/drawer.dart';
 import 'contestant_status.dart';
 import 'top_contestants.dart';
@@ -32,14 +33,9 @@ class _ESquadDashBoardState extends State<ESquadDashBoard> {
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark));
     return Scaffold(
-        backgroundColor: const Color(0xffF8FAFF),
+        backgroundColor: const Color(0xffF6f6f9),
         appBar: AppBar(
           backgroundColor: const Color(0xffF8FAFF),
-          // leading: const Icon(
-          //   Icons.menu,
-          //   size: 24,
-          //   color: Color.fromARGB(255, 120, 116, 134),
-          // ),
           title: const SizedBox(
             width: 130,
             child: Row(
@@ -58,25 +54,31 @@ class _ESquadDashBoardState extends State<ESquadDashBoard> {
               ],
             ),
           ),
-          actions: const [
-            Icon(
+          actions: [
+            const Icon(
               Icons.notifications_outlined,
               color: Color.fromARGB(255, 120, 116, 134),
             ),
-            SizedBox(
+            const SizedBox(
               width: 7,
             ),
-            CircleAvatar(
-              radius: 15.0,
-              backgroundImage: NetworkImage(
-                  'https://th.bing.com/th/id/R.0f36a9b7563d5a0787b5661ce63f3ee8?rik=cJxNXWv6Gt5s8g&riu=http%3a%2f%2fadvantagebodylanguage.com%2fwp-content%2fuploads%2f2015%2f12%2fgewoman.jpg&ehk=nR1PFEO%2fHz1YZ3XLQsKWjtU3Ga%2boY%2f4NzLcCMXB3uYU%3d&risl=&pid=ImgRaw&r=0'),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePolygonRoute(),
+                  ),
+                );
+              },
+              child: const CircleAvatar(
+                radius: 15.0,
+                backgroundImage: NetworkImage(
+                    'https://th.bing.com/th/id/R.0f36a9b7563d5a0787b5661ce63f3ee8?rik=cJxNXWv6Gt5s8g&riu=http%3a%2f%2fadvantagebodylanguage.com%2fwp-content%2fuploads%2f2015%2f12%2fgewoman.jpg&ehk=nR1PFEO%2fHz1YZ3XLQsKWjtU3Ga%2boY%2f4NzLcCMXB3uYU%3d&risl=&pid=ImgRaw&r=0'),
+              ),
             ),
             //  SizedBox(width:2,),
-            Icon(
-              Icons.expand_more,
-              color: Color.fromARGB(255, 41, 45, 50),
-            ),
-            SizedBox(
+
+            const SizedBox(
               width: 20,
             )
           ],
@@ -92,15 +94,24 @@ class _ESquadDashBoardState extends State<ESquadDashBoard> {
               mainAxisSpacing: 2,
               children: [
                 //CardWidget( BuildContext context, IconData icon, String title, String value, , Color color)
-                CardWidget(context, Icons.bar_chart, "Total Contest", "224",
-                    const Color.fromARGB(255, 9, 74, 154)),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ContestList(),
+                      ),
+                    );
+                  },
+                  child: CardWidget(context, Icons.bar_chart, "Total Contest",
+                      "224", const Color(0xffe9edfa), const Color(0xff264eca)),
+                ),
                 CardWidget(context, Icons.group, "Total Groups", "5",
-                    const Color.fromARGB(255, 44, 227, 59)),
+                    const Color(0xffe9f7ef), const Color(0xff26af61)),
 
                 CardWidget(context, Icons.groups, "Total Members", "5",
-                    const Color.fromARGB(255, 227, 111, 44)),
-                CardWidget(context, Icons.alarm, "Total Hourse", "1005",
-                    Color.fromARGB(255, 157, 44, 227)),
+                    const Color(0xfffef7e9), const Color(0xfff6b612)),
+                CardWidget(context, Icons.alarm, "Total Hours", "1005",
+                    const Color(0xfffde8e8), const Color(0xfffa4a49)),
               ],
             ),
           ),
@@ -146,7 +157,8 @@ class _ESquadDashBoardState extends State<ESquadDashBoard> {
                           ],
                           activeFgColor: const Color.fromARGB(255, 23, 22, 22),
                           inactiveBgColor: Colors.white,
-                          inactiveFgColor: Color.fromARGB(255, 97, 95, 95),
+                          inactiveFgColor:
+                              const Color.fromARGB(255, 97, 95, 95),
                           totalSwitches: 4,
                           labels: const ['Week', 'Months', 'Quarter', 'Year'],
                           onToggle: (index) {

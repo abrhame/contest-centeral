@@ -1,12 +1,4 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import '../../../../../../../../core/utils/circle_image.dart';
-import '../../../../../../../../core/utils/img.dart';
-import '../../../../../../../../core/utils/my_colors.dart';
-import '../../../../../../../../core/utils/my_text.dart';
-import '../contest_stats/pi_chart_widget.dart';
 
 class AddContest extends StatefulWidget {
   @override
@@ -43,10 +35,15 @@ class _AddContestState extends State<AddContest> {
     return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
-          leading: const Icon(
-            Icons.menu,
-            size: 24,
-            color: Color.fromARGB(255, 120, 116, 134),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              size: 24,
+              color: Color.fromARGB(255, 120, 116, 134),
+            ),
           ),
           title: const SizedBox(
             width: 130,
@@ -116,141 +113,190 @@ class _AddContestState extends State<AddContest> {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                width: double.maxFinite,
-                height: 50,
-                decoration: BoxDecoration(
-                    // border: Border),
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: DropdownButton(
-                      value: _selectedCountry,
-                      icon: const Icon(Icons.expand_more),
-                      underline: Container(
-                        height: 5,
-                      ),
-                      items: const [
-                        DropdownMenuItem(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton(
+                        value: _selectedCountry,
+                        icon: const Padding(
+                          padding: EdgeInsets.only(left: 200.0),
+                          child: Icon(Icons.expand_more),
+                        ),
+                        iconSize: 24,
+                        elevation: 16,
+                        underline: Container(
+                          height: 2,
+                        ),
+                        //    style: const TextStyle(font: 150), // Set a fixed width
+                        items: const [
+                          DropdownMenuItem(
                             value: "select",
                             child: Text(
-                              "select                                                            ",
+                              "Select",
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 147, 150, 153)),
-                            )),
-                        DropdownMenuItem(
+                                color: Color.fromARGB(255, 147, 150, 153),
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
                             value: "Ethiopia",
                             child: Text(
                               "Ethiopia",
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 147, 150, 153)),
-                            )),
-                        DropdownMenuItem(
+                                color: Color.fromARGB(255, 147, 150, 153),
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
                             value: "Ghana",
                             child: Text(
                               "Ghana",
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 147, 150, 153)),
-                            )),
-                      ],
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedCountry = newValue!;
-                          if (_selectedCountry != "select" &&
-                              !_selectedCountries.contains(newValue)) {
-                            _selectedCountries.add(newValue);
-                          }
-                        });
-                      }),
-                ),
-              ),
-              const SizedBox(
-                  height: 10), // Add space between dropdown and chips
-              Wrap(
-                spacing: 8.0,
-                direction: Axis.horizontal,
-                children: _selectedCountries.map((item) {
-                  return Chip(
-                    label: Text(item),
-                    onDeleted: () {
-                      setState(() {
-                        _selectedCountries.remove(item);
-
-                        _selectedCountry = "select";
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-              const Text(
-                "University",
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Color.fromARGB(255, 107, 114, 128)),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: double.maxFinite,
-                height: 50,
-                decoration: BoxDecoration(
-                    // border: Border),
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: DropdownButton(
-                      value: _selectedUniversity,
-                      icon: const Icon(Icons.expand_more),
-                      underline: Container(
-                        height: 5,
+                                color: Color.fromARGB(255, 147, 150, 153),
+                              ),
+                            ),
+                          ),
+                        ],
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedCountry = newValue!;
+                            if (_selectedCountry != "select" &&
+                                !_selectedCountries.contains(newValue)) {
+                              _selectedCountries.add(newValue);
+                            }
+                          });
+                        },
                       ),
-                      items: const [
-                        DropdownMenuItem(
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    "University",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromARGB(255, 107, 114, 128)),
+                  ),
+                  SingleChildScrollView(
+                    child: Wrap(
+                      spacing: 8.0,
+                      direction: Axis.horizontal,
+                      children: _selectedCountries.map((item) {
+                        return Chip(
+                          label: Text(item),
+                          onDeleted: () {
+                            setState(() {
+                              _selectedCountries.remove(item);
+                              _selectedCountry = "select";
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButton(
+                        value: _selectedCountry,
+                        icon: const Padding(
+                          padding: EdgeInsets.only(left: 200.0),
+                          child: Icon(Icons.expand_more),
+                        ),
+                        iconSize: 24,
+                        elevation: 16,
+                        underline: Container(
+                          height: 2,
+                        ),
+                        //    style: const TextStyle(font: 150), // Set a fixed width
+                        items: const [
+                          DropdownMenuItem(
                             value: "select",
                             child: Text(
-                              "select                                                            ",
+                              "Select",
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 147, 150, 153)),
-                            )),
-                        DropdownMenuItem(
-                            value: "AAIT",
-                            child: Text(
-                              "AAIT",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 147, 150, 153)),
-                            )),
-                        DropdownMenuItem(
+                                color: Color.fromARGB(255, 147, 150, 153),
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
                             value: "AASTU",
                             child: Text(
                               "AASTU",
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 147, 150, 153)),
-                            )),
-                        DropdownMenuItem(
-                            value: "ASTU",
+                                color: Color.fromARGB(255, 147, 150, 153),
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: "AAiT",
                             child: Text(
-                              "ASTU",
+                              "AAiT",
                               style: TextStyle(
-                                  color: Color.fromARGB(255, 147, 150, 153)),
-                            )),
-                      ],
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedUniversity = newValue!;
-                          if (_selectedUniversity != "select" &&
-                              !_selectedUniversities.contains(newValue)) {
-                            _selectedUniversities.add(newValue);
-                          }
-                        });
-                      }),
-                ),
+                                color: Color.fromARGB(255, 147, 150, 153),
+                              ),
+                            ),
+                          ),
+                        ],
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedCountry = newValue!;
+                            if (_selectedCountry != "select" &&
+                                !_selectedCountries.contains(newValue)) {
+                              _selectedCountries.add(newValue);
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SingleChildScrollView(
+                    child: Wrap(
+                      spacing: 8.0,
+                      direction: Axis.horizontal,
+                      children: _selectedCountries.map((item) {
+                        return Chip(
+                          label: Text(item),
+                          onDeleted: () {
+                            setState(() {
+                              _selectedCountries.remove(item);
+                              _selectedCountry = "select";
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
               ),
-              const SizedBox(
-                  height: 10), // Add space between dropdown and chips
+
               Wrap(
                 spacing: 8.0,
                 direction: Axis.horizontal,
@@ -608,7 +654,7 @@ class _AddContestState extends State<AddContest> {
               //     ),
               //   ),
               // ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
@@ -622,11 +668,11 @@ class _AddContestState extends State<AddContest> {
                       // side: BorderSide(color: Colors.blue), // Border color
                     ),
                     // elevation: 4.0, // Elevation
-                    backgroundColor:
-                        Color.fromARGB(255, 38, 78, 202), // Background color
+                    backgroundColor: const Color.fromARGB(
+                        255, 38, 78, 202), // Background color
                   ),
                   onPressed: () {},
-                  child: Text(
+                  child: const Text(
                     "Finish",
                     style: TextStyle(
                         fontWeight: FontWeight.w400, color: Colors.white),

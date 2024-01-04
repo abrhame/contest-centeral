@@ -1,4 +1,4 @@
-namespace ContestCentral.Application.Common.Models;
+namespace Application.Common.Models;
 
 public class Result {
     internal Result(bool success, string? message = null, IEnumerable<string>? errors = null) {
