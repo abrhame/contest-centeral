@@ -1,4 +1,3 @@
-using MediatR;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Web;
@@ -159,11 +158,6 @@ public class AuthService : IAuthService
         return Result.SuccessResult("Email sent successfully");
     }
 
-    public Task<Unit> LogoutAsync()
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<Result> VerifyEmailAsync(string code)
     {
         var VerificationRequest = await _unitOfWork.VerificationRepository.GetByTokenAsync(code); 
@@ -203,14 +197,130 @@ public class AuthService : IAuthService
         return Result.SuccessResult("Email Verified Successfully");
     }
 
-    public Task<Result> ForgotPasswordAsync(string email)
+    public async Task<Result> ForgotPasswordAsync(string email)
     {
-        throw new NotImplementedException();
+        var user = await _unitOfWork.UserRepository.GetByEmailAsync(email);
+
+        if (user == null)
+        {
+            _logger.Error($"User with email {email} not found");
+            return Result.FailureResult(new List<string> { $"User with email {email} not found" });
+        }
+
+        var token = _tokenService.GenerateVerificationToken(user);
+
+        var emailVerification = new Verification
+        {
+            Token = token,
+            User = user,
+            UserId = user.Id,
+            ExpirationDate = DateTime.UtcNow.AddDays(1),
+            VerificationType = VerificationType.PasswordReset
+        };
+
+        await _unitOfWork.VerificationRepository.AddAsync(emailVerification);
+        await _unitOfWork.CommitAsync();
+
+        var emailHtml = $@"
+        <!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
+            <html xmlns=""http://www.w3.org/1999/xhtml"" lang=""en"">
+            <head>
+                <meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8"" />
+            </head>
+            <body style=""background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen-Sans,Ubuntu,Cantarell,'Helvetica Neue',sans-serif"">
+                <table align=""center"" role=""presentation"" cellspacing=""0"" cellpadding=""0"" border=""0"" width=""100%"" style=""max-width:37.5em;margin:0 auto;padding:20px 0 48px;"">
+                    <tr style=""width:100%"">
+                        <td>
+                            <img alt=""ContestCentral"" src=""https://hacks.a2sv.org/assets/A2SV_LOGO%20(2).svg"" width=""170"" height=""50"" style=""display:block;outline:none;border:none;text-decoration:none;margin:0 auto"" />
+                            <p style=""font-size:16px;line-height:26px;margin:16px 0;"">Hi {user.FirstName},</p>
+                            <p style=""font-size:16px;line-height:26px;margin:16px 0;"">Please follow the instructions to reset your password</p>
+                            <table style=""text-align:center"" align=""center"" border=""0"" cellpadding=""0"" cellspacing=""0"" role=""presentation"" width=""100%"">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href=""http://localhost:5127/api/auth/resetpassword?token={HttpUtility.UrlEncode(token)}"" target=""_blank"" style=""background-color:#5F51E8;border-radius:3px;color:#fff;font-size:16px;text-decoration:none;text-align:center;display:inline-block;padding:12px 12px;line-height:100%;max-width:100%;"">
+                                                Reset Password
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p style=""font-size:16px;line-height:26px;margin:16px 0;"">Best,<br />Contest Central</p>
+                            <hr style=""width:100%;border:none;border-top:1px solid #eaeaea;border-color:#cccccc;margin:20px 0;"">
+                        </td>
+                    </tr>
+                </table>
+            </body>
+        </html>";
+
+        var response = await _emailService.SendAsync(
+                new EmailRequest(
+                    new string[] {user.Email}, 
+                    "ContestCentral - Reset Password", 
+                    emailHtml
+                    )
+                );
+        
+        if ( !response.Success ) {
+            _logger.Error($"Error sending email to {user.Email}");
+        }
+
+        return Result.SuccessResult("Email sent successfully");
     }
 
-    public Task<Result> ResetPasswordAsync(ResetPasswordRequestDto request)
+    public async Task<(Result, User?)> RefreshTokenAsync(string token)
     {
-        throw new NotImplementedException();
+        var dbToken = await _unitOfWork.TokenRepository.GetByTokenAsync(token);
+
+        if ( dbToken == null )
+        {
+            return (Result.FailureResult(new List<string> { "Invalid Token" }), null);  
+        }
+
+        if ( dbToken.Expires < DateTime.UtcNow )
+        {
+            return (Result.FailureResult(new List<string> { "Token Expired" }), null);  
+        }
+
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(dbToken.UserId);
+
+        if ( user == null )
+        {
+            return (Result.FailureResult(new List<string> { "User not found" }), null);  
+        }
+
+        return (Result.SuccessResult("UserValidated"), user);
+
+    }
+
+    public async Task<Result> ResetPasswordAsync(ResetPasswordRequestDto request, string token)
+    {
+        var VerificationRequest = await _unitOfWork.VerificationRepository.GetByTokenAsync(token);
+
+        if (VerificationRequest == null)
+        {
+            return Result.FailureResult(new List<string> { "Verification Request not found" });
+        }
+
+        if (VerificationRequest.ExpirationDate < DateTime.UtcNow)
+        {
+            return Result.FailureResult(new List<string> { "Verification Request expired" });
+        }
+
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(VerificationRequest.UserId);
+
+        if (user == null)
+        {
+            return Result.FailureResult(new List<string> { "User not found" });
+        }
+
+        user.PasswordHashed = _passwordService.HashPassword(request.newPassword);
+
+        await _unitOfWork.UserRepository.UpdateAsync(user);
+        await _unitOfWork.VerificationRepository.DeleteAsync(VerificationRequest);
+        await _unitOfWork.CommitAsync();
+
+        return Result.SuccessResult("Password reset successfully");
     }
 
     public Task<Result> UpdateProfileAsync(RegisterUserRequestDto request)

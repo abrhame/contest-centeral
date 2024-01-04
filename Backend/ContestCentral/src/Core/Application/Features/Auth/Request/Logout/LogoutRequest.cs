@@ -2,4 +2,4 @@ using MediatR;
 
 namespace Application.Features.Auth.Requests;
 
-public record LogoutRequest : IRequest<Unit>;
+public record LogoutRequest(string RefreshToken) : IRequest<Unit>;

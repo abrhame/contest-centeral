@@ -28,7 +28,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
             return Result.FailureResult(new List<string>(validationResult.Errors.Select(e => e.ErrorMessage)));
         }
 
-        var result = await _authService.ResetPasswordAsync(request.Request);
+        var result = await _authService.ResetPasswordAsync(request.Request, request.token);
 
         if (result.Success)
         {
