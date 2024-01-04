@@ -99,4 +99,30 @@ public class TokenService : ITokenService {
 		var token = SHA256.HashData(Encoding.ASCII.GetBytes(userHash));
 		return Convert.ToHexString(token);
 	}
+
+	public bool ValidateAccessToken(string accessToken, out Guid userId) {
+		var tokenHandler = new JwtSecurityTokenHandler();
+
+		var tokenValidationParams = new TokenValidationParameters {
+			ValidateIssuerSigningKey = true,
+			IssuerSigningKey = new SymmetricSecurityKey(_tokenSecret),
+			ValidateIssuer = true,
+			ValidateAudience = true,
+			ClockSkew = TimeSpan.Zero,
+			ValidAudience = _audience,
+			ValidIssuer = _issuer,
+		};
+
+		try {
+			tokenHandler.ValidateToken(accessToken, tokenValidationParams, out SecurityToken token);
+			var jwt = (JwtSecurityToken)token;
+			var valid = Guid.TryParse(jwt.Subject, out var id);
+			userId = id;
+			return valid;
+		}
+		catch (Exception) {
+			userId = default;
+			return false;
+		}
+	}
 }

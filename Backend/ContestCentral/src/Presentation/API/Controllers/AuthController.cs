@@ -4,11 +4,14 @@ using MediatR;
 using Application.DTOs;
 using Application.Features.Auth.Commands;
 using Application.Features.Auth.Requests;
+using Api.Helpers;
+using Domain.Constant;
 
 namespace Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class AuthController : ControllerBase 
 {
     private readonly IMediator _mediator;
@@ -19,6 +22,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
+    [Authorize(Role.Administrator)]
     public async Task<IActionResult> Register(RegisterUserRequestDto request)
     {
         if (!ModelState.IsValid)
@@ -41,6 +45,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("verifyemail")]
+    [AllowAnonymous]
     public async Task<IActionResult> VerifyEmail(string token)
     {
         var result = await _mediator.Send(new VerifyEmailCommand(token));
@@ -54,6 +59,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login(LoginUserRequestDto request)
     {
         if (!ModelState.IsValid)
@@ -86,6 +92,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("logout")]
+    [AllowAnonymous]
     public async Task<IActionResult> Logout()
     {
         var refreshToken = Request.Cookies["refreshToken"];
@@ -114,6 +121,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("resetpassword")]
+    [AllowAnonymous]
     public async Task<IActionResult> ResetPassword(
             ResetPasswordRequestDto request,
             [FromQuery(Name = "token")] string token
@@ -135,6 +143,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("forgotpassword")]
+    [AllowAnonymous]
     public async Task<IActionResult> ForgotPassword(string email)
     {
         if (!ModelState.IsValid)
@@ -153,6 +162,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("refresh")]
+    [AllowAnonymous]
     public async Task<IActionResult> RefreshToken()
     {
         var refreshToken = Request.Cookies["refreshToken"];
