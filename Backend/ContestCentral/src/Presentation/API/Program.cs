@@ -50,9 +50,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseMiddleware<JWTMiddleware>();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
