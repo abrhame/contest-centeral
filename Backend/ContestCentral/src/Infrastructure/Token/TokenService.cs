@@ -11,12 +11,14 @@ using Domain.Entity;
 namespace Infrastructure.Tokens;
 
 public class TokenService : ITokenService {
-	private readonly byte[] _tokenSecret;
+	private readonly byte[] _accesstokenSecret;
+	private readonly byte[] _refreshtokenSecret;
 	private readonly string _issuer;
 	private readonly string _audience;
 
 	public TokenService(IOptions<TokenSettings> tokenSettings) {
-		_tokenSecret = Encoding.ASCII.GetBytes(tokenSettings.Value.Secret);
+		_accesstokenSecret = Encoding.ASCII.GetBytes(tokenSettings.Value.AccessTokenSecret);
+		_refreshtokenSecret = Encoding.ASCII.GetBytes(tokenSettings.Value.RefreshTokenSecret);
 		_issuer = tokenSettings.Value.Issuer;
 		_audience = tokenSettings.Value.Audience;
 	}
@@ -37,7 +39,7 @@ public class TokenService : ITokenService {
 
 			Expires = DateTime.UtcNow.AddMinutes(15),
 			SigningCredentials = new SigningCredentials(
-				new SymmetricSecurityKey(_tokenSecret),
+				new SymmetricSecurityKey(_accesstokenSecret),
 				SecurityAlgorithms.HmacSha256Signature
 			),
 			Issuer = _issuer,
@@ -56,7 +58,7 @@ public class TokenService : ITokenService {
 			Subject = new ClaimsIdentity(new[] { new Claim(JwtRegisteredClaimNames.Jti, tokenId.ToString()), }),
 			Expires = DateTime.UtcNow.AddDays(14),
 			SigningCredentials = new SigningCredentials(
-				new SymmetricSecurityKey(_tokenSecret),
+				new SymmetricSecurityKey(_refreshtokenSecret),
 				SecurityAlgorithms.HmacSha256Signature
 			),
 			Issuer = _issuer,
@@ -72,7 +74,7 @@ public class TokenService : ITokenService {
 
 		var tokenValidationParams = new TokenValidationParameters {
 			ValidateIssuerSigningKey = true,
-			IssuerSigningKey = new SymmetricSecurityKey(_tokenSecret),
+			IssuerSigningKey = new SymmetricSecurityKey(_refreshtokenSecret),
 			ValidateIssuer = true,
 			ValidateAudience = true,
 			ClockSkew = TimeSpan.Zero,
@@ -105,7 +107,7 @@ public class TokenService : ITokenService {
 
 		var tokenValidationParams = new TokenValidationParameters {
 			ValidateIssuerSigningKey = true,
-			IssuerSigningKey = new SymmetricSecurityKey(_tokenSecret),
+			IssuerSigningKey = new SymmetricSecurityKey(_accesstokenSecret),
 			ValidateIssuer = true,
 			ValidateAudience = true,
 			ClockSkew = TimeSpan.Zero,
