@@ -7,6 +7,7 @@ COPY . ./
 RUN dotnet restore
 # Build and publish a release
 FROM build AS publish
+RUN dotnet tool install --global dotnet-ef
 RUN dotnet ef migrations add InitialCreate -s src/Presentation/API -p src/Infrastructure
 RUN dotnet ef database update -s src/Presentation/API -p src/Infrastructure
 
