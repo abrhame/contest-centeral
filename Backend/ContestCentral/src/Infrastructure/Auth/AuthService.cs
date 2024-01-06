@@ -51,6 +51,11 @@ public class AuthService : IAuthService
             return (Result.FailureResult(new List<string> { $"Invalid Password" }), null);
         }
 
+        if ( user.EmailVerified == null ) {
+            await SendEmailVerification(user);
+            return (Result.FailureResult(new List<string> { $"Email not verified" }), null);
+        }
+
         return (Result.SuccessResult("Login Successful"), user);
     }
 
@@ -97,6 +102,13 @@ public class AuthService : IAuthService
 
     private async Task<Result> SendEmailVerification(User user)
     {
+        var result = await _unitOfWork.VerificationRepository.GetByUserIdAsync(user.Id);
+
+        if (result != null)
+        {
+            await _unitOfWork.VerificationRepository.DeleteAsync(result);
+        }
+
         var token = _tokenService.GenerateVerificationToken(user);
 
         var emailVerification = new Verification
