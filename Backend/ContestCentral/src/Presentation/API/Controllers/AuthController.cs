@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    [AllowAnonymous]
+    [Authorize(Role.Administrator)]
     public async Task<IActionResult> Register(RegisterUserRequestDto request)
     {
         if (!ModelState.IsValid)
