@@ -8,7 +8,7 @@ using Application.Interfaces;
 
 namespace Application.Features.Groups.GetAllGroups.Handler;
 
-public class GetAllGroupsRequestHandler : IRequestHandler<GetAllGroupsRequest, (Result, List<GroupDto>)>
+public class GetAllGroupsRequestHandler : IRequestHandler<GetAllGroupsRequest, (Result, List<GroupResponseDto>)>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;  
@@ -19,11 +19,11 @@ public class GetAllGroupsRequestHandler : IRequestHandler<GetAllGroupsRequest, (
         _mapper = mapper;
     }
 
-    public async Task<(Result, List<GroupDto>)> Handle(GetAllGroupsRequest request, CancellationToken cancellationToken)
+    public async Task<(Result, List<GroupResponseDto>)> Handle(GetAllGroupsRequest request, CancellationToken cancellationToken)
     {
         var groups = await _unitOfWork.GroupRepository.GetAllAsync();
 
-        var response = _mapper.Map<List<GroupDto>>(groups);
+        var response = _mapper.Map<List<GroupResponseDto>>(groups);
 
         return (Result.SuccessResult("Successful"), response);
     }

@@ -30,7 +30,7 @@ public class UpdateLocationCommandHandler : IRequestHandler<UpdateLocationComman
             return Result.FailureResult(validationResult.Errors.Select(e => e.ErrorMessage));
         }
 
-        var location = await _unitOfWork.LocationRepository.GetByLocationCodeAsync(request.requestDto.ShortName);
+        var location = await _unitOfWork.LocationRepository.GetByIdAsync(request.Id);
 
         if (location == null)
         {

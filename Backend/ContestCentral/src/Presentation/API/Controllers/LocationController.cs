@@ -19,7 +19,7 @@ public class LocationController : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> Create(LocationDto request)
+    public async Task<IActionResult> Create(CreateLocationRequestDto request)
     {
         var result = await _mediator.Send( new CreateLocationCommand(request));
 
@@ -31,10 +31,13 @@ public class LocationController : ControllerBase
         return BadRequest(result);
     }
 
-    [HttpPost("update")]
-    public async Task<IActionResult> Update(LocationDto request)
+    [HttpPut("update/{id}")]
+    public async Task<IActionResult> Update(
+        Guid Id,
+        [FromBody] UpdateLocationRequestDto request
+        )
     {
-        var result = await _mediator.Send(new UpdateLocationCommand(request));
+        var result = await _mediator.Send(new UpdateLocationCommand(Id, request));
 
         if (result.Success)
         {
@@ -45,9 +48,9 @@ public class LocationController : ControllerBase
     }
 
     [HttpGet("get/{id}")]
-    public async Task<IActionResult> Get(Guid GroupId)
+    public async Task<IActionResult> Get(Guid Id)
     {
-        var (result, response) = await _mediator.Send(new GetLocationRequest(GroupId));
+        var (result, response) = await _mediator.Send(new GetLocationRequest(Id));
 
         if (result.Success)
         {
@@ -71,9 +74,9 @@ public class LocationController : ControllerBase
     }
 
     [HttpDelete("delete/{id}")]
-    public async Task<IActionResult> Delete(Guid GroupId)
+    public async Task<IActionResult> Delete(Guid Id)
     {
-        var result = await _mediator.Send(new DeleteLocationCommand(GroupId));
+        var result = await _mediator.Send(new DeleteLocationCommand(Id));
 
         if (result.Success)
         {

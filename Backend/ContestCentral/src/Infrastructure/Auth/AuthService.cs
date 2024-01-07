@@ -39,7 +39,7 @@ public class AuthService : IAuthService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<(Result, User?)> LoginAsync(LoginUserRequestDto request)
+    public async Task<(Result, User?)> LoginAsync(AuthRequestDto request)
     {
         var user = await _unitOfWork.UserRepository.GetByEmailAsync(request.Email);
 
@@ -59,7 +59,7 @@ public class AuthService : IAuthService
         return (Result.SuccessResult("Login Successful"), user);
     }
 
-    public async Task<Result> RegisterAsync(RegisterUserRequestDto request)
+    public async Task<Result> RegisterAsync(CreateUserRequestDto request)
     {
         var findGroup = await _context.Groups.FirstOrDefaultAsync(x => x.ShortName == request.GroupShortName);
 
@@ -156,7 +156,7 @@ public class AuthService : IAuthService
         </html>";
 
         var response = await _emailService.SendAsync(
-                new EmailRequest(
+                new EmailMetadata(
                     new string[] {user.Email}, 
                     "ContestCentral - Email Verification", 
                     emailHtml
@@ -266,7 +266,7 @@ public class AuthService : IAuthService
         </html>";
 
         var response = await _emailService.SendAsync(
-                new EmailRequest(
+                new EmailMetadata(
                     new string[] {user.Email}, 
                     "ContestCentral - Reset Password", 
                     emailHtml
@@ -335,7 +335,7 @@ public class AuthService : IAuthService
         return Result.SuccessResult("Password reset successfully");
     }
 
-    public Task<Result> UpdateProfileAsync(RegisterUserRequestDto request)
+    public Task<Result> UpdateProfileAsync(UpdateUserRequestDto request)
     {
         throw new NotImplementedException();
     }

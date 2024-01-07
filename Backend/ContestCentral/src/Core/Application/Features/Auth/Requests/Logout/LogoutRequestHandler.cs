@@ -29,13 +29,11 @@ public class LogoutRequestHandler : IRequestHandler<LogoutRequest, Unit>
 
         var token = await _unitOfWork.TokenRepository.GetByIdAsync(tokenId);
 
-        if (token is null)
+        if (token != null)
         {
-            return Unit.Value;
+            await _unitOfWork.TokenRepository.DeleteAsync(token);
+            await _unitOfWork.CommitAsync();
         }
-
-        await _unitOfWork.TokenRepository.DeleteAsync(token);
-        await _unitOfWork.CommitAsync();
 
         return Unit.Value;
     }

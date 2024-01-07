@@ -22,7 +22,7 @@ public class GroupsController : ControllerBase
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> Create(CreateGroupDto request)
+    public async Task<IActionResult> Create(CreateGroupRequestDto request)
     {
         var result = await _mediator.Send( new CreateGroupCommand(request));
 
@@ -34,10 +34,13 @@ public class GroupsController : ControllerBase
         return BadRequest(result);
     }
 
-    [HttpPost("update")]
-    public async Task<IActionResult> Update(GroupDto request)
+    [HttpPut("update/{id}")]
+    public async Task<IActionResult> Update(
+        Guid Id,
+        [FromBody] CreateGroupRequestDto request
+    )
     {
-        var result = await _mediator.Send(new UpdateGroupCommand(request));
+        var result = await _mediator.Send(new UpdateGroupCommand(Id, request));
 
         if (result.Success)
         {
@@ -48,9 +51,9 @@ public class GroupsController : ControllerBase
     }
 
     [HttpGet("get/{id}")]
-    public async Task<IActionResult> Get(Guid GroupId)
+    public async Task<IActionResult> Get(Guid Id)
     {
-        var (result, response) = await _mediator.Send(new GetGroupRequest(GroupId));
+        var (result, response) = await _mediator.Send(new GetGroupRequest(Id));
 
         if (result.Success)
         {
@@ -74,9 +77,9 @@ public class GroupsController : ControllerBase
     }
 
     [HttpDelete("delete/{id}")]
-    public async Task<IActionResult> Delete(Guid GroupId)
+    public async Task<IActionResult> Delete(Guid Id)
     {
-        var result = await _mediator.Send(new DeleteGroupCommand(GroupId));
+        var result = await _mediator.Send(new DeleteGroupCommand(Id));
 
         if (result.Success)
         {

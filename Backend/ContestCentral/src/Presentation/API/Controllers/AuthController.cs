@@ -23,7 +23,7 @@ public class AuthController : ControllerBase
 
     [HttpPost("register")]
     [Authorize(Role.Administrator)]
-    public async Task<IActionResult> Register(RegisterUserRequestDto request)
+    public async Task<IActionResult> Register(CreateUserRequestDto request)
     {
         if (!ModelState.IsValid)
         {
@@ -60,7 +60,7 @@ public class AuthController : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(LoginUserRequestDto request)
+    public async Task<IActionResult> Login(AuthRequestDto request)
     {
         if (!ModelState.IsValid)
         {
@@ -97,27 +97,23 @@ public class AuthController : ControllerBase
     {
         var refreshToken = Request.Cookies["refreshToken"];
 
-        if (refreshToken == null)
+        if (refreshToken != null)
         {
-            return BadRequest(new { 
-                    Success = false,
-                    Message = "Refresh token is required"
-                    });
+            await _mediator.Send(new LogoutRequest(refreshToken));
+
+            var cookieOptions = new CookieOptions {
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                Expires = DateTime.UtcNow.AddDays(-7),
+                SameSite = SameSiteMode.Strict
+            };
+
+            Response.Cookies.Append("refreshToken", "", cookieOptions);
+
         }
 
-        var result = await _mediator.Send(new LogoutRequest(refreshToken));
-
-        var cookieOptions = new CookieOptions {
-            HttpOnly = true,
-            Secure = true,
-            IsEssential = true,
-            Expires = DateTime.UtcNow.AddDays(-7),
-            SameSite = SameSiteMode.Strict
-        };
-
-        Response.Cookies.Append("refreshToken", "", cookieOptions);
-
-        return Ok(result);
+        return Ok();
     }
 
     [HttpPost("resetpassword")]

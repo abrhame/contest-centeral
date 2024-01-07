@@ -7,7 +7,7 @@ using Application.Common.Models;
 
 namespace Application.Features.Locations.Requests.Handler;
 
-public class GetAllLocationsRequestHandler : IRequestHandler<GetAllLocationsRequest, (Result, List<LocationDto>?)>
+public class GetAllLocationsRequestHandler : IRequestHandler<GetAllLocationsRequest, (Result, List<LocationResponseDto>?)>
 {
     private readonly IUnitOfWork _unitOfWork; 
     private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ public class GetAllLocationsRequestHandler : IRequestHandler<GetAllLocationsRequ
         _mapper = mapper;
     }
 
-    public async Task<(Result, List<LocationDto>?)> Handle(GetAllLocationsRequest request, CancellationToken cancellationToken)
+    public async Task<(Result, List<LocationResponseDto>?)> Handle(GetAllLocationsRequest request, CancellationToken cancellationToken)
     {
         var locations = await _unitOfWork.LocationRepository.GetAllAsync();
         
@@ -27,10 +27,8 @@ public class GetAllLocationsRequestHandler : IRequestHandler<GetAllLocationsRequ
             return (Result.FailureResult(new List<string> { "No locations found" }), null);
         }
 
-        var locationsDto = _mapper.Map<List<LocationDto>>(locations);
+        var locationsDto = _mapper.Map<List<LocationResponseDto>>(locations);
 
         return (Result.SuccessResult("Locations found successfully"), locationsDto);
     }
 }
-
-
