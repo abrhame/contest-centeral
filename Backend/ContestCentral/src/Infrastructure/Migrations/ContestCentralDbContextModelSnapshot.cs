@@ -149,6 +149,17 @@ namespace Infrastructure.Migrations
                     b.HasIndex("LocationId");
 
                     b.ToTable("Groups");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("e83c75fa-c80b-4c20-9e2c-f210b4b8d2c8"),
+                            CreatedAt = new DateTime(2024, 1, 6, 10, 45, 42, 297, DateTimeKind.Utc).AddTicks(4938),
+                            LocationId = new Guid("1a6170fa-5ed5-4141-ade8-ac3123534548"),
+                            Name = "Group A",
+                            ShortName = "",
+                            UpdatedAt = new DateTime(2024, 1, 6, 10, 45, 42, 297, DateTimeKind.Utc).AddTicks(4939)
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entity.Location", b =>
@@ -181,6 +192,18 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Locations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("1a6170fa-5ed5-4141-ade8-ac3123534548"),
+                            City = "Addis Ababa",
+                            Country = "Ethiopia",
+                            CreatedAt = new DateTime(2024, 1, 6, 10, 45, 42, 297, DateTimeKind.Utc).AddTicks(4790),
+                            ShortName = "",
+                            University = "Addis Ababa Science and Technology University",
+                            UpdatedAt = new DateTime(2024, 1, 6, 10, 45, 42, 297, DateTimeKind.Utc).AddTicks(4790)
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entity.Question", b =>
@@ -386,6 +409,22 @@ namespace Infrastructure.Migrations
                     b.HasIndex("GroupId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f93d86d8-86d9-45c4-bf76-c1b821c8b8e1"),
+                            CreatedAt = new DateTime(2024, 1, 6, 10, 45, 42, 297, DateTimeKind.Utc).AddTicks(4976),
+                            Email = "admin@a2sv.org",
+                            FirstName = "Admin",
+                            GroupId = new Guid("e83c75fa-c80b-4c20-9e2c-f210b4b8d2c8"),
+                            LastName = "Admin",
+                            PasswordHashed = "$2a$11$ht26EvrERnewmuW7f6PKOe0n5FQQs5mi8tDKG6OM0iusUqCG9vMJC",
+                            Role = 3,
+                            StudentType = 1,
+                            UpdatedAt = new DateTime(2024, 1, 6, 10, 45, 42, 297, DateTimeKind.Utc).AddTicks(4976),
+                            UserName = ""
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entity.Verification", b =>
@@ -418,6 +457,21 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Verifications");
+                });
+
+            modelBuilder.Entity("GroupQuestion", b =>
+                {
+                    b.Property<Guid>("GroupsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("QuestionsId")
+                        .HasColumnType("text");
+
+                    b.HasKey("GroupsId", "QuestionsId");
+
+                    b.HasIndex("QuestionsId");
+
+                    b.ToTable("GroupQuestion");
                 });
 
             modelBuilder.Entity("QuestionTags", b =>
@@ -583,6 +637,21 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GroupQuestion", b =>
+                {
+                    b.HasOne("Domain.Entity.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.Question", null)
+                        .WithMany()
+                        .HasForeignKey("QuestionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("QuestionTags", b =>

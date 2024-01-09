@@ -5,4 +5,4 @@ using Application.Common.Models;
 
 namespace Application.Features.Auth.Commands;
 
-public record RegisterUserCommand( RegisterUserRequestDto Request ) : IRequest<Result>;
+public record RegisterUserCommand(CreateUserRequestDto Request) : IRequest<Result>;

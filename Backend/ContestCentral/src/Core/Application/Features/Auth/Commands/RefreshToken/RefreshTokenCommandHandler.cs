@@ -61,9 +61,9 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, (
 
         await _unitOfWork.CommitAsync();
 
-        var userResponse = _mapper.Map<UserDto>(user);
+        var userResponse = _mapper.Map<UserResponseDto>(user);
 
-        var authResponse = new AuthResponseDto (_tokenService.GenerateAccessToken(user), userResponse, newRefreshToken);
+        var authResponse = new AuthResponseDto (_tokenService.GenerateAccessToken(user), newRefreshToken, userResponse);
 
         return (Result.SuccessResult("Successfully refreshed token"), authResponse);
 

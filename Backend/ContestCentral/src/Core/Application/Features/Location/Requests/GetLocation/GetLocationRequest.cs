@@ -5,4 +5,4 @@ using Application.Common.Models;
 
 namespace Application.Features.Locations.Requests;
 
-public record GetLocationRequest(Guid LocationId) : IRequest<(Result, LocationDto?)>;
+public record GetLocationRequest(Guid LocationId) : IRequest<(Result, LocationResponseDto?)>;

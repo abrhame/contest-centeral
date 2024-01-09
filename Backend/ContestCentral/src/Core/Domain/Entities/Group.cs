@@ -13,5 +13,7 @@ public class Group : BaseEntity<Guid>
 
     public Guid LocationId { get; set; }
     public Location Location { get; set; } = null!;
+
+    public ICollection<Question> Questions { get; set; } = new List<Question>();
 }
 

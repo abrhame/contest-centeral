@@ -52,23 +52,23 @@ const ApexChart = () => {
 
   return (
     <div className="bg-white rounded-xl py-4 px-3">
-        <div className="flex items-center justify-end space-x-4 mb-4 mx-5">
-          <div className="flex">
-            <div className="border border-gray-300 px-2 py-1 rounded text-gray-500">Box 1</div>
-            <div className="border border-gray-300 px-2 py-1 rounded text-gray-500">Box 2</div>
-            <div className="border border-gray-300 px-2 py-1 rounded bg-blue-300 text-blue-800">Box 3 (Active)</div>
-          </div>
-
-          <select className="border border-gray-300 text-gray-500 px-2 py-1 rounded">
-            <option value="all">All</option>
-            <option value="this-year">This Year</option>
-            <option value="last-year">Last Year</option>
-          </select>
+      <div className="flex items-center justify-end space-x-4 mb-4 mx-5">
+        <div className="flex">
+          <div className="border border-gray-300 px-2 py-1 rounded text-gray-500">Box 1</div>
+          <div className="border border-gray-300 px-2 py-1 rounded text-gray-500">Box 2</div>
+          <div className="border border-gray-300 px-2 py-1 rounded bg-blue-300 text-blue-800">Box 3 (Active)</div>
         </div>
+
+        <select className="border border-gray-300 text-gray-500 px-2 py-1 rounded">
+          <option value="all">All</option>
+          <option value="this-year">This Year</option>
+          <option value="last-year">Last Year</option>
+        </select>
+      </div>
 
       <div className="row">
         <div className="mixed-chart">
-          <Chart options={options} series={series} type="area" width="800" height="400" />
+          <Chart options={options} series={series} type="area" width="100%" height="400" />
         </div>
       </div>
     </div>

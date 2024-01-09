@@ -25,6 +25,7 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
             .Matches("[a-z]").WithMessage("{PropertyName} must contain at least 1 lowercase letter.")
             .Matches("[0-9]").WithMessage("{PropertyName} must contain at least 1 number.")
             .Matches("[^a-zA-Z0-9]").WithMessage("{PropertyName} must contain at least 1 non-alphanumeric character.");
+
         
         // Rule For FirstName.
         RuleFor(u => u.Request.FirstName)

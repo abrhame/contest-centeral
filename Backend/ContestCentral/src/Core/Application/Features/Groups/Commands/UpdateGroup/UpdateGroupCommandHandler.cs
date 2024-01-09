@@ -20,14 +20,14 @@ public class UpdateGroupCommandHandler : IRequestHandler<UpdateGroupCommand, Res
 
     public async Task<Result> Handle(UpdateGroupCommand request, CancellationToken cancellationToken)
     {
-        var group = await _unitOfWork.GroupRepository.GetGroupByShortNameAsync(request.GroupDto.ShortName);
+        var group = await _unitOfWork.GroupRepository.GetByIdAsync(request.Id);
 
         if (group == null)
         {
             return Result.FailureResult(new List<string> {"Group does not exist"});
         }
 
-        group = _mapper.Map<Group>(request.GroupDto);
+        group = _mapper.Map<Group>(request.GroupDto.GroupInfo);
 
         await _unitOfWork.GroupRepository.UpdateAsync(group);
 

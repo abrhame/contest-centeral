@@ -260,16 +260,34 @@ class ProfilePolygonRouteState extends State<ProfilePolygonRoute> {
                                   filled: true,
                                     fillColor: Color.fromARGB(100, 203, 213, 224),
                                     
-                                    suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _oldpassword ? Icons.visibility : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _oldpassword = !_oldpassword;
-                                      });
-                                    },
-                                  ),
+                                    suffixIcon:   Container(
+                                      margin: EdgeInsets.all(5),
+                                        
+                                      
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          left: BorderSide(
+                                            color: Color.fromARGB(255, 203, 213, 224), // Color of the left border
+                                            width: 1.0,
+                                            
+                                            
+                                            
+                                          ),
+                                        ),
+                                      ),
+                                      child: IconButton(
+                                        icon: Icon(
+                                          _oldpassword ? Icons.visibility : Icons.visibility_off,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _oldpassword = !_oldpassword;
+                                          });
+                                        },
+                                      ),
+                               ),
+                                    
+                                
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(18),
                                         borderSide: BorderSide(
@@ -299,16 +317,35 @@ class ProfilePolygonRouteState extends State<ProfilePolygonRoute> {
                                   filled: true,
                                     fillColor: Color.fromARGB(100, 203, 213, 224),
                                     
-                                    suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _newpassword ? Icons.visibility : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _newpassword = !_newpassword;
-                                      });
-                                    },
-                                  ),
+                                    suffixIcon: Container(
+                                      margin: EdgeInsets.all(5),
+                                        
+                                      
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          left: BorderSide(
+                                            color: Color.fromARGB(255, 203, 213, 224), // Color of the left border
+                                            width: 1.0,
+                                            
+                                            
+                                            
+                                          ),
+                                        ),
+                                      ),
+                                      child: IconButton(
+                                        icon: Icon(
+                                          _newpassword ? Icons.visibility : Icons.visibility_off,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _newpassword = !_newpassword;
+                                          });
+                                        },
+                                      ),
+                               ),
+                                    
+                                
+                                    
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(18),
                                         borderSide: BorderSide(
@@ -339,16 +376,34 @@ class ProfilePolygonRouteState extends State<ProfilePolygonRoute> {
                                 decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Color.fromARGB(100, 203, 213, 224),
-                                    suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _confirmpassword ? Icons.visibility : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _confirmpassword = !_confirmpassword;
-                                      });
-                                    },
-                                  ),
+                                    suffixIcon:  Container(
+                                      margin: EdgeInsets.all(5),
+                                        
+                                      
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          left: BorderSide(
+                                            color: Color.fromARGB(255, 203, 213, 224), // Color of the left border
+                                            width: 1.0,
+                                            
+                                            
+                                            
+                                          ),
+                                        ),
+                                      ),
+                                      child: IconButton(
+                                        icon: Icon(
+                                          _confirmpassword ? Icons.visibility : Icons.visibility_off,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _confirmpassword = !_confirmpassword;
+                                          });
+                                        },
+                                      ),
+                               ),
+                                    
+                                
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(18),
                                         borderSide: BorderSide(

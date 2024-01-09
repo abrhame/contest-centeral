@@ -30,7 +30,11 @@ public static class InfrastructureServices {
     }
 
     private static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration) {
-        var DbConnectionString = configuration.GetConnectionString("ContestCentralDbConnection");
+        var Env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        var DbConnectionString = Env == "Production" ? 
+            Environment.GetEnvironmentVariable("ContestCentralDbConnectionString") : 
+            configuration.GetConnectionString("ContestCentralDbConnection");
 
         services.AddDbContext<ContestCentralDbContext>(options =>
                 options.UseNpgsql(DbConnectionString, b => 
@@ -38,6 +42,21 @@ public static class InfrastructureServices {
 
 
         services.AddScoped<IContestCentralDbContext>(provider => provider.GetRequiredService<ContestCentralDbContext>());
+
+        var AdminSettings = new AdminSettings();
+
+        if ( Env == "Production" ) 
+        {
+            AdminSettings.Email = Environment.GetEnvironmentVariable("AdminEmail")!;
+            AdminSettings.Password = Environment.GetEnvironmentVariable("AdminPassword")!;
+        } 
+        else 
+        {
+            var AdminSettingsSection = configuration.GetSection("AdminSettings");
+            configuration.Bind(AdminSettings.SectionName, AdminSettingsSection.Value);
+        }
+
+        services.AddSingleton(Options.Create(AdminSettings));
 
         return services;
     }
@@ -47,6 +66,7 @@ public static class InfrastructureServices {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IContestRepository, ContestRepository>();
         services.AddScoped<IGroupRepository, GroupRepository>();
+        services.AddScoped<IQuestionRepository, QuestionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ICodeforcesService, CodeforcesService>();
 
@@ -54,8 +74,18 @@ public static class InfrastructureServices {
     }
 
     private static IServiceCollection AddEmailServices(this IServiceCollection services, IConfiguration configuration) {
+        var Env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         var emailSettings = new EmailSettings();
-        configuration.Bind(emailSettings.SectionName, emailSettings);
+
+        if ( Env == "Production" ) {
+            emailSettings.Host = Environment.GetEnvironmentVariable("EmailHost")!;
+            emailSettings.Port = int.Parse(Environment.GetEnvironmentVariable("EmailPort")!);
+            emailSettings.UserName = Environment.GetEnvironmentVariable("EmailUserName")!;
+            emailSettings.Password = Environment.GetEnvironmentVariable("EmailPassword")!;
+            emailSettings.DefaultFromEmail = Environment.GetEnvironmentVariable("EmailDefaultFromEmail")!;
+        } else {
+            configuration.Bind(emailSettings.SectionName, emailSettings);
+        }
 
         services.AddSingleton(Options.Create(emailSettings));
         services.AddTransient<IEmailService, EmailService>();
@@ -65,7 +95,17 @@ public static class InfrastructureServices {
 
     private static IServiceCollection AddAuthenticationServices(this IServiceCollection services, IConfiguration configuration) {
         var tokenSettings = new TokenSettings(); 
-        configuration.Bind(tokenSettings.SectionName, tokenSettings);
+
+        var Env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        if (Env == "Production") {
+            tokenSettings.AccessTokenSecret = Environment.GetEnvironmentVariable("AccessTokenSecret")!;
+            tokenSettings.RefreshTokenSecret = Environment.GetEnvironmentVariable("RefreshTokenSecret")!;
+            tokenSettings.Issuer = Environment.GetEnvironmentVariable("Issuer")!;
+            tokenSettings.Audience = Environment.GetEnvironmentVariable("Audience")!;
+        } else {
+            configuration.Bind(tokenSettings.SectionName, tokenSettings);
+        }
 
         services.AddSingleton(Options.Create(tokenSettings));
         services.AddScoped<IAuthService, AuthService>();
@@ -87,7 +127,7 @@ public static class InfrastructureServices {
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = tokenSettings.Issuer,
                     ValidAudience = tokenSettings.Audience, 
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Secret)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.AccessTokenSecret)),
                 };
             })
             ;

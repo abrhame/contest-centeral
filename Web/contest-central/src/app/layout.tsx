@@ -43,7 +43,7 @@ export default function RootLayout({
           <Box sx={{ width: '100%' }}>
             <Header open={open} handleDrawerToggle={handleDrawerToggle} />
             <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
-            <div className='pt-16 pl-52 pr-6 bg-primaryGray-100'>
+            <div className='pt-16 md:pl-64 md:pr-6 bg-primaryGray-100 w-full'>
               {children}
             </div>
           </Box>

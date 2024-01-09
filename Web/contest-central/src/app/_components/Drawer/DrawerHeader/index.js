@@ -6,6 +6,8 @@ import { Stack } from '@mui/material';
 
 // project import
 import DrawerHeaderStyled from './DrawerHeaderStyled';
+import Image from 'next/image';
+import logo from '../../../../../public/images/logo color.svg'
 
 // ==============================|| DRAWER HEADER ||============================== //
 
@@ -16,7 +18,7 @@ const DrawerHeader = ({ open }) => {
     // only available in paid version
     <DrawerHeaderStyled theme={theme} open={open}>
       <Stack direction="row" spacing={1} alignItems="center">
-        {/* LOGO */}
+        <Image src={logo} alt="Hi" className='w-36 h-auto' />
       </Stack>
     </DrawerHeaderStyled>
   );

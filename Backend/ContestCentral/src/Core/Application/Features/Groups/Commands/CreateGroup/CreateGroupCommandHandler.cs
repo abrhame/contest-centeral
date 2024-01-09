@@ -28,7 +28,7 @@ public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, Res
             return Result.FailureResult(validatorResult.Errors.Select(e => e.ErrorMessage));
         }
 
-        var group = _mapper.Map<Group>(request.CreateGroup.GroupDto);
+        var group = _mapper.Map<Group>(request.CreateGroup.GroupInfo);
 
         var location = await _unitOfWork.LocationRepository.GetByLocationCodeAsync(request.CreateGroup.LocationCode);
 

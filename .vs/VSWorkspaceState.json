@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Backend",
+    "\\Backend\\ContestCentral",
+    "\\Backend\\ContestCentral\\src",
+    "\\Backend\\ContestCentral\\src\\Infrastructure",
+    "\\Backend\\ContestCentral\\src\\Infrastructure\\Persistence"
+  ],
+  "SelectedNode": "\\Backend\\ContestCentral\\src\\Infrastructure\\Persistence\\ApplicationDbContext.cs",
+  "PreviewInSolutionExplorer": false
+}
