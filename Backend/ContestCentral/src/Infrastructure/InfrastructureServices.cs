@@ -15,6 +15,7 @@ using Application.Interfaces;
 using Infrastructure.Auth;
 using Infrastructure.Password;
 using Infrastructure.Logging;
+using Infrastructure.Codeforces;
 
 namespace Infrastructure;
 
@@ -67,6 +68,7 @@ public static class InfrastructureServices {
         services.AddScoped<IGroupRepository, GroupRepository>();
         services.AddScoped<IQuestionRepository, QuestionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ICodeforcesService, CodeforcesService>();
 
         return services;
     }
