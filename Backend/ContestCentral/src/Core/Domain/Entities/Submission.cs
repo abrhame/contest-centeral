@@ -7,7 +7,7 @@ public class Submission : BaseEntity<Guid>
     public string QuestionId { get; set; } = default!;
     public Question Question { get; set; } = null!;
 
-    public int Attempts { get; set; }
+    public int Trial { get; set; }
     public int Points { get; set; }
 
     public Guid? TeamId { get; set; }

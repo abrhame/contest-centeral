@@ -17,5 +17,6 @@ public class MappingProfile : Profile {
 
         CreateMap<Question, CreateQuestionDto>().ReverseMap();
         CreateMap<Question, GetQuestionByTitleDto>().ReverseMap();
+        CreateMap<Submission, SubmissionDTO>().ReverseMap();
     }
 }

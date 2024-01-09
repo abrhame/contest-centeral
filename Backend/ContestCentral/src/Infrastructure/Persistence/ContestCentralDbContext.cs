@@ -10,7 +10,7 @@ public class ContestCentralDbContext : DbContext, IContestCentralDbContext
 {
     public ContestCentralDbContext(DbContextOptions<ContestCentralDbContext> options) : base(options) {}
 
-    public required DbSet<User> Users { get; set; } 
+    public required DbSet<User> Users { get; set; }
     public required DbSet<Team> Teams { get; set; }
     public required DbSet<Contest> Contests { get; set; }
 
