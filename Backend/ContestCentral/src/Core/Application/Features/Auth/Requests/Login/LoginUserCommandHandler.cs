@@ -26,9 +26,7 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, (Result
 
     public async Task<(Result, AuthResponseDto?)> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
-        var validator = new LoginUserCommandValidator();
-
-        var validationResult = await validator.ValidateAsync(request);
+        var validationResult = await new LoginUserCommandValidator().ValidateAsync(request);
 
         if (!validationResult.IsValid)
         {
@@ -37,7 +35,7 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, (Result
 
         var (result, response) = await _authService.LoginAsync(request.Request);
 
-        if ( response is null)
+        if ( !result.Success || response == null )
         {
             return (Result.FailureResult(result.Errors ?? new List<string>()), null);
         }
@@ -60,7 +58,7 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, (Result
                     new AuthResponseDto (
                         AccessToken: AccessToken,
                         RefreshToken: RefreshToken,
-                        User: _mapper.Map<UserDto>(response)
+                        User: _mapper.Map<UserResponseDto>(response)
                         )
                     );
 

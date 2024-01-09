@@ -7,7 +7,7 @@ using Application.Interfaces;
 
 namespace Application.Features.Groups.GetGroup.Handler;
 
-public class GetGroupRequestHandler : IRequestHandler<GetGroupRequest, (Result, GroupDto)>
+public class GetGroupRequestHandler : IRequestHandler<GetGroupRequest, (Result, GroupResponseDto)>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ public class GetGroupRequestHandler : IRequestHandler<GetGroupRequest, (Result, 
         _mapper = mapper;
     }
 
-    public async Task<(Result, GroupDto)> Handle(GetGroupRequest request, CancellationToken cancellationToken)
+    public async Task<(Result, GroupResponseDto)> Handle(GetGroupRequest request, CancellationToken cancellationToken)
     {
         var group = await _unitOfWork.GroupRepository.GetByIdAsync(request.GroupId);
 
@@ -27,7 +27,7 @@ public class GetGroupRequestHandler : IRequestHandler<GetGroupRequest, (Result, 
             return (Result.FailureResult(new List<string> { "Group does not exist" }), null!);
         }
 
-        var response = _mapper.Map<GroupDto>(group);
+        var response = _mapper.Map<GroupResponseDto>(group);
 
         return (Result.SuccessResult("Successful"), response);
     }

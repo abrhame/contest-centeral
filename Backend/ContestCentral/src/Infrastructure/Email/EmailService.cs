@@ -19,7 +19,7 @@ public class EmailService : IEmailService {
         _logger = logger;
     }
 
-    public async Task<Result> SendAsync(EmailRequest request) {
+    public async Task<Result> SendAsync(EmailMetadata request) {
         try {
             using var smtp = new SmtpClient();
             await smtp.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls);

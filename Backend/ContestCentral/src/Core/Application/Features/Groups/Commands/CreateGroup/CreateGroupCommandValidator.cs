@@ -6,11 +6,11 @@ public class CreateGroupCommandValidator : AbstractValidator<CreateGroupCommand>
 {
     public CreateGroupCommandValidator()
     {
-        RuleFor(v => v.CreateGroup.GroupDto.Name)
+        RuleFor(v => v.CreateGroup.GroupInfo.Name)
             .NotEmpty().WithMessage("Name is required.")
             .MaximumLength(200).WithMessage("Name must not exceed 200 characters.");
 
-        RuleFor(v => v.CreateGroup.GroupDto.ShortName)
+        RuleFor(v => v.CreateGroup.GroupInfo.ShortName)
             .NotEmpty().WithMessage("ShortName is required.")
             .MaximumLength(200).WithMessage("ShortName must not exceed 200 characters.");
 

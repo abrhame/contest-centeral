@@ -4,4 +4,4 @@ using Application.DTOs;
 
 namespace Application.Features.Groups.GetAllGroups;
 
-public record GetAllGroupsRequest() : IRequest<(Result, List<GroupDto>)>;
+public record GetAllGroupsRequest() : IRequest<(Result, List<GroupResponseDto>)>;

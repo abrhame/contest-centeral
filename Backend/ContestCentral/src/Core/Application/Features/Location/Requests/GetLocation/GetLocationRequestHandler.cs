@@ -7,7 +7,7 @@ using Application.Common.Models;
 
 namespace Application.Features.Locations.Requests.Handler;
 
-public class GetLocationRequestHandler : IRequestHandler<GetLocationRequest, (Result, LocationDto?)>
+public class GetLocationRequestHandler : IRequestHandler<GetLocationRequest, (Result, LocationResponseDto?)>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ public class GetLocationRequestHandler : IRequestHandler<GetLocationRequest, (Re
         _mapper = mapper;
     }
 
-    public async Task<(Result, LocationDto?)> Handle(GetLocationRequest request, CancellationToken cancellationToken)
+    public async Task<(Result, LocationResponseDto?)> Handle(GetLocationRequest request, CancellationToken cancellationToken)
     {
         var location = await _unitOfWork.LocationRepository.GetByIdAsync(request.LocationId);
 
@@ -27,7 +27,7 @@ public class GetLocationRequestHandler : IRequestHandler<GetLocationRequest, (Re
             return (Result.FailureResult(new List<string> { "Location does not exist" }), null);
         }
 
-        var locationDto = _mapper.Map<LocationDto>(location);
+        var locationDto = _mapper.Map<LocationResponseDto>(location);
 
         return (Result.SuccessResult("Location found successfully"), locationDto);
 

@@ -5,5 +5,5 @@ namespace Application.Interfaces;
 
 public interface IEmailService
 {
-    Task<Result> SendAsync(EmailRequest request);
+    Task<Result> SendAsync(EmailMetadata request);
 }

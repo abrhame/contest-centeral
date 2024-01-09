@@ -2,7 +2,8 @@ using Domain.Constant;
 
 namespace Application.DTOs;
 
-public record UserDto(
+public record UserResponseDto (
+    Guid Id,
     string FirstName,
     string LastName,
     string Email,
