@@ -29,7 +29,7 @@ const Page = () => {
       <div>
         {
           isGroup && (
-            <div className='bg-black h-screen'></div>
+            <div className=''></div>
           )
         }
         {

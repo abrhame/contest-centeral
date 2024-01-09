@@ -5,7 +5,7 @@ import { IoMdClose } from "react-icons/io";
 
 export default function LeaderBoardLayout(props: React.PropsWithChildren) {
   return (
-    <div className="bg-primaryGray-100 h-screen">
+    <div className="bg-primaryGray-100">
       {props.children}
     </div>
   )
