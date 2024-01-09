@@ -4,5 +4,5 @@ using Application.DTOs;
 
 namespace Application.Features.Groups.CreateGroup;
 
-public record CreateGroupCommand( CreateGroupDto CreateGroup ) : IRequest<Result>;
+public record CreateGroupCommand( CreateGroupRequestDto CreateGroup ) : IRequest<Result>;
 

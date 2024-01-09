@@ -6,13 +6,5 @@ public class UpdateLocationCommandValidator : AbstractValidator<UpdateLocationCo
 {
     public UpdateLocationCommandValidator()
     {
-        RuleFor(u => u.requestDto.City)
-            .NotEmpty().WithMessage("{PropertyName} is required.");
-
-        RuleFor(u => u.requestDto.Country)
-            .NotEmpty().WithMessage("{PropertyName} is required.");
-
-        RuleFor(u => u.requestDto.ShortName)
-            .NotEmpty().WithMessage("{PropertyName} is required.");
     }
 }

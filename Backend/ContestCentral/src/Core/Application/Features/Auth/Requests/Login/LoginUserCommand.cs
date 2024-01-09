@@ -4,4 +4,4 @@ using Application.DTOs;
 
 namespace Application.Features.Auth.Commands;
 
-public record LoginUserCommand( LoginUserRequestDto Request ) : IRequest<(Result, AuthResponseDto?)>;
+public record LoginUserCommand( AuthRequestDto Request ) : IRequest<(Result, AuthResponseDto?)>;
