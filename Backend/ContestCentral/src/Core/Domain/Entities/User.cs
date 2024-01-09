@@ -1,3 +1,4 @@
+
 using Domain.Common;
 using Domain.Constant;
 
@@ -13,6 +14,10 @@ public class User : BaseEntity<Guid>
     public DateTime? EmailVerified { get; set; }
     public string PasswordHashed { get; set; } = string.Empty;
 
+    public string? PhoneNumber { get; set; }
+
+    public StudentType StudentType { get; set; } = StudentType.Onsite;
+
     public string? Avatar { get; set; }
     public string? Bio { get; set; }
 
@@ -24,7 +29,4 @@ public class User : BaseEntity<Guid>
     public ICollection<Team> Teams { get; set; } = new List<Team>();
     public ICollection<Contest> Contests { get; set; } = new List<Contest>();
     public ICollection<Submission> Submissions { get; set; } = new List<Submission>();
-
-    public Guid? VerificationId { get; set; }
-    public Verification? Verification { get; set; }
 }

@@ -3,6 +3,10 @@ using MediatR;
 
 using Application.DTOs;
 using Application.Features.Groups.CreateGroup;
+using Application.Features.Groups.UpdateGroup;
+using Application.Features.Groups.GetGroup;
+using Application.Features.Groups.GetAllGroups;
+using Application.Features.Groups.DeleteCommand;
 
 namespace Api.Controllers;
 
@@ -27,6 +31,58 @@ public class GroupsController : ControllerBase
             return Ok(result);
         }
 
-        return Ok(result);
+        return BadRequest(result);
+    }
+
+    [HttpPost("update")]
+    public async Task<IActionResult> Update(GroupDto request)
+    {
+        var result = await _mediator.Send(new UpdateGroupCommand(request));
+
+        if (result.Success)
+        {
+            return Ok(result);
+        }
+
+        return BadRequest(result);
+    }
+
+    [HttpGet("get/{id}")]
+    public async Task<IActionResult> Get(Guid GroupId)
+    {
+        var (result, response) = await _mediator.Send(new GetGroupRequest(GroupId));
+
+        if (result.Success)
+        {
+            return Ok(response);
+        }
+
+        return BadRequest(result);
+    }
+
+    [HttpGet("get")]
+    public async Task<IActionResult> Get()
+    {
+        var (result, response) = await _mediator.Send(new GetAllGroupsRequest());
+
+        if (result.Success)
+        {
+            return Ok(response);
+        }
+
+        return BadRequest(result);
+    }
+
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> Delete(Guid GroupId)
+    {
+        var result = await _mediator.Send(new DeleteGroupCommand(GroupId));
+
+        if (result.Success)
+        {
+            return Ok(result);
+        }
+
+        return BadRequest(result);
     }
 }

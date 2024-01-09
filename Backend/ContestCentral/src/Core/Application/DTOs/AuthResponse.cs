@@ -1,3 +1,3 @@
 namespace Application.DTOs;
 
-public record AuthResponseDto(string accessToken, UserDto user, string refreshToken);
+public record AuthResponseDto(string AccessToken, UserDto User, string RefreshToken);

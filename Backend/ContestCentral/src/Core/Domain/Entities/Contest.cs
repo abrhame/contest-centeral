@@ -10,9 +10,8 @@ public class Contest: BaseEntity<Guid>
     public ContestStatus ContestStatus { get; set; } = ContestStatus.Upcoming; 
     public string? ContestUrl { get; set; }
     public DateTime ContestDate { get; set; }
-
-    public Guid? CreatorId { get; set; }
-    public User? Creator { get; set; }
+    
+    public string? CreatorName { get; set; } = string.Empty;
 
     public int Duration { get; set; }
 
