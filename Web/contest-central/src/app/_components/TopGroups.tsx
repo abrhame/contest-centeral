@@ -5,9 +5,9 @@ import TopGroupCard from './TopGroupCard'
 
 const TopGroups = () => {
   return (
-    <div className='bg-white flex flex-col justify-center items-center gap-y-3 py-4 rounded-xl'>
+    <div className='bg-white flex flex-col w-96 justify-center items-center gap-y-3 py-4 rounded-xl'>
       <div className='flex justify-center items-center gap-x-3 text-primaryGray-300 text-xl'>
-        <div className='p-2.5 w-14 h-14 flex justify-center items-center shadow-lg rounded-full bg-yellow-100'>
+        <div className='p-2 w-14 h-14 flex justify-center items-center shadow-lg rounded-full bg-yellow-100'>
           <Image src={topGroup} className=' w-11 h-11' alt="Hi" />
         </div>
         <p>Top Groups</p>
