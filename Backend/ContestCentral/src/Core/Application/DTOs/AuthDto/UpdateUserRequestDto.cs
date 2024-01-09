@@ -1,5 +1,3 @@
-using Domain.Constant;
-
 namespace Application.DTOs;
 
 public record UpdateUserRequestDto {
@@ -8,8 +6,6 @@ public record UpdateUserRequestDto {
     public string LastName { get; set; } = string.Empty; 
     public string Email { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
-    public string GroupShortName { get; set; } = string.Empty;
-
-    public Role Role { get; set; } = Role.Student;
-    public StudentType StudentType { get; set; } = StudentType.Onsite;
+    public string Bio { get; set; } = string.Empty;
+    public string Avatar { get; set; } = string.Empty;
 };

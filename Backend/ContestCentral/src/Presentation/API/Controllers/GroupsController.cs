@@ -8,10 +8,14 @@ using Application.Features.Groups.GetGroup;
 using Application.Features.Groups.GetAllGroups;
 using Application.Features.Groups.DeleteCommand;
 
+using Api.Helpers;
+using Domain.Constant;
+
 namespace Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class GroupsController : ControllerBase 
 {
     private readonly IMediator _mediator;
@@ -22,6 +26,7 @@ public class GroupsController : ControllerBase
     }
 
     [HttpPost("create")]
+    [Authorize(Role.Administrator)]
     public async Task<IActionResult> Create(CreateGroupRequestDto request)
     {
         var result = await _mediator.Send( new CreateGroupCommand(request));
@@ -34,7 +39,8 @@ public class GroupsController : ControllerBase
         return BadRequest(result);
     }
 
-    [HttpPut("update/{id}")]
+    [HttpPut("update/{id:guid}")]
+    [Authorize(Role.Administrator)]
     public async Task<IActionResult> Update(
         Guid Id,
         [FromBody] CreateGroupRequestDto request
@@ -50,7 +56,8 @@ public class GroupsController : ControllerBase
         return BadRequest(result);
     }
 
-    [HttpGet("get/{id}")]
+    [HttpGet("get/{id:guid}")]
+    [Authorize(Role.Administrator, Role.Student, Role.ContestCreator, Role.HeadOfEducation)]
     public async Task<IActionResult> Get(Guid Id)
     {
         var (result, response) = await _mediator.Send(new GetGroupRequest(Id));
@@ -64,6 +71,7 @@ public class GroupsController : ControllerBase
     }
 
     [HttpGet("get")]
+    [Authorize(Role.Administrator, Role.Student, Role.ContestCreator, Role.HeadOfEducation)]
     public async Task<IActionResult> Get()
     {
         var (result, response) = await _mediator.Send(new GetAllGroupsRequest());
@@ -76,7 +84,8 @@ public class GroupsController : ControllerBase
         return BadRequest(result);
     }
 
-    [HttpDelete("delete/{id}")]
+    [HttpDelete("delete/{id:guid}")]
+    [Authorize(Role.Administrator)]
     public async Task<IActionResult> Delete(Guid Id)
     {
         var result = await _mediator.Send(new DeleteGroupCommand(Id));

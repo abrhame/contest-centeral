@@ -63,13 +63,16 @@ public class AccountsController : ControllerBase
         return BadRequest(result);
     }
 
-    [HttpGet("get/{id}")]
+    [HttpGet("get/{id:guid}")]
     [Authorize(Role.Administrator, Role.HeadOfEducation, Role.ContestCreator, Role.Student)]
-    public async Task<IActionResult> GetAccount(Guid Id)
+    public async Task<IActionResult> GetAccount(Guid id)
     {
+        Console.WriteLine("THE ID IS", id);
+
         var user = (User?)HttpContext.Items["User"];
 
-        if (user?.Role == Role.Student && user.Id != Id)
+
+        if (user?.Role == Role.Student && user.Id != id)
         {
             return Unauthorized(new { 
                     Success = false,
@@ -77,7 +80,7 @@ public class AccountsController : ControllerBase
                     });
         }
 
-        var (result, response) = await _mediator.Send(new GetAccountRequest(Id));
+        var (result, response) = await _mediator.Send(new GetAccountRequest(id));
 
         if (result.Success)
         {
@@ -91,10 +94,9 @@ public class AccountsController : ControllerBase
         return BadRequest(result);
     }
 
-    [HttpPut("update/{id}")]
+    [HttpPut("update")]
     [Authorize(Role.Administrator, Role.HeadOfEducation, Role.ContestCreator, Role.Student)]
     public async Task<IActionResult> UpdateAccount(
-            Guid Id, 
             [FromBody] UpdateUserRequestDto request)
     {
         if (!ModelState.IsValid)
@@ -104,7 +106,7 @@ public class AccountsController : ControllerBase
 
         var user = (User?)HttpContext.Items["User"];
 
-        if (user?.Role == Role.Student && user.Id != Id)
+        if ( user == null)
         {
             return Unauthorized(new { 
                     Success = false,
@@ -112,15 +114,7 @@ public class AccountsController : ControllerBase
                     });
         }
 
-        if ( request.Role.ToString().Any() && user?.Role != Role.Administrator )
-        {
-            return Unauthorized(new { 
-                    Success = false,
-                    Message = "Unauthorized"
-                    });
-        }
-
-        var result = await _mediator.Send(new UpdateAccountCommand(Id, request));
+        var result = await _mediator.Send(new UpdateAccountCommand(user.Id, request));
 
         if (result.Success)
         {
@@ -130,11 +124,34 @@ public class AccountsController : ControllerBase
         return BadRequest(result);
     }
 
-    [HttpDelete("delete/{id}")]
+
+    [HttpPut("update/role/{id:guid}")]
     [Authorize(Role.Administrator)]
-    public async Task<IActionResult> DeleteAccount ( Guid Id)
+    public async Task<IActionResult> UpdateAccountRole(
+            Guid id, 
+            [FromBody] Role request)
     {
-        var result = await _mediator.Send(new DeleteAccountCommand(Id));
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await _mediator.Send(new UpdateUserRoleCommand(id, request));
+
+        if (result.Success)
+        {
+            return Ok(result);
+        }
+
+        return BadRequest(result);
+    }
+
+
+    [HttpDelete("delete/{id:guid}")]
+    [Authorize(Role.Administrator)]
+    public async Task<IActionResult> DeleteAccount ( Guid id)
+    {
+        var result = await _mediator.Send(new DeleteAccountCommand(id));
 
         if (result.Success)
         {
