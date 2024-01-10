@@ -1,43 +1,27 @@
-using Infrastructure;
-using Application;
-using Api.Helpers;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
-using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
-// Add services to the container.
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddSwaggerGen(option => {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "ContestCentral", Version = "v1" });
-    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
-        In = ParameterLocation.Header,
-        Description = "Please enter a valid token",
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
+builder.Services.AddRateLimiter(options =>
+    {
+        options.AddSlidingWindowLimiter("SlidingWindow", opts =>
+        {
+            opts.Window = TimeSpan.FromMinutes(1);
+            opts.PermitLimit = 100;
+            opts.QueueLimit = 100;
+            opts.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        });
     });
 
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement {{
-        new OpenApiSecurityScheme {
-            Reference = new OpenApiReference {
-                Type=ReferenceType.SecurityScheme,
-                Id="Bearer"
-            }
-        },
-        new string[]{}
-    }});
-});
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -48,13 +32,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseRateLimiter();
 
-app.UseMiddleware<JWTMiddleware>();
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseOutputCache();
 
 app.Run();

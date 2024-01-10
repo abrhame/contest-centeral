@@ -1,97 +1,68 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-
-using Infrastructure.Persistence;
-using Infrastructure.Persistence.Repositories;
-
-using Infrastructure.Email;
-using Infrastructure.Tokens;
-using Application.Interfaces;
-using Infrastructure.Auth;
-using Infrastructure.Password;
-using Infrastructure.Logging;
-using Infrastructure.Codeforces;
 
 namespace Infrastructure;
 
-public static class InfrastructureServices {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration) {
-        services.AddPersistenceServices(configuration);
-        services.AddRepositories();
-        services.AddEmailServices(configuration);
-        services.AddAuthenticationServices(configuration);
-
+public static class InfrastructureServices
+{
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        AddPersistence(services, configuration);
+        AddRepositories(services, configuration);
+        AddAuthentication(services, configuration);
+        AddAuthorization(services, configuration);
+        AddCaching(services, configuration);
+        AddLogging(services, configuration);
+        AddMessaging(services, configuration);
         return services;
     }
 
-    private static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration) {
-        var DbConnectionString = configuration.GetConnectionString("ContestCentralDbConnection");
+    public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
+    {
+    }
 
-        services.AddDbContext<ContestCentralDbContext>(options =>
-                options.UseNpgsql(DbConnectionString, b => 
-                    b.MigrationsAssembly(typeof(ContestCentralDbContext).Assembly.FullName)));
-
-
-        services.AddScoped<IContestCentralDbContext>(provider => provider.GetRequiredService<ContestCentralDbContext>());
-
+    public static IServiceCollection AddRepositories(this IServiceCollection services, IConfiguration configuration)
+    {
         return services;
     }
 
-    private static IServiceCollection AddRepositories(this IServiceCollection services) {
-        services.AddScoped<ILogger, Logger>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IContestRepository, ContestRepository>();
-        services.AddScoped<IGroupRepository, GroupRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<ICodeforcesService, CodeforcesService>();
+    public static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration configuration)
+    {
+        //TODO: Change the configuration if environment is in production.
 
-        return services;
-    }
-
-    private static IServiceCollection AddEmailServices(this IServiceCollection services, IConfiguration configuration) {
-        var emailSettings = new EmailSettings();
-        configuration.Bind(emailSettings.SectionName, emailSettings);
-
-        services.AddSingleton(Options.Create(emailSettings));
-        services.AddTransient<IEmailService, EmailService>();
-
-        return services;
-    }
-
-    private static IServiceCollection AddAuthenticationServices(this IServiceCollection services, IConfiguration configuration) {
-        var tokenSettings = new TokenSettings(); 
-        configuration.Bind(tokenSettings.SectionName, tokenSettings);
-
-        services.AddSingleton(Options.Create(tokenSettings));
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IPasswordService, PasswordService>();
-
-        services.AddAuthentication(
-                options => {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        services.AddOutputCache(options =>
+            {
+                options.AddBasePolicy( opts =>
+                        opts.Expire(TimeSpan.FromMinutes(10))
+                        );
             })
-            .AddJwtBearer(options => {
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = tokenSettings.Issuer,
-                    ValidAudience = tokenSettings.Audience, 
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Secret)),
-                };
-            })
-            ;
+            .AddStackExchangeRedisOutputCache(options =>
+            {
+                options.Configuration = configuration.GetConnectionString("ContestCentralCacheConnection");
+                options.InstanceName = "ContestCentralRedisCache";
+            });
 
+        return services;
+    }
+
+
+    public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        return services;
+    }
+
+    public static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
+    {
+        return services;
+    }
+
+    public static IServiceCollection AddLogging(this IServiceCollection services, IConfiguration configuration)
+    {
+        return services;
+    }
+
+    public static IServiceCollection AddMessaging(this IServiceCollection services, IConfiguration configuration)
+    {
         return services;
     }
 }
