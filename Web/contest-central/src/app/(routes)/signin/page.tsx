@@ -1,11 +1,11 @@
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
-const page = () => {
+const SignIn = () => {
   return (
     <div className="h-screen flex">
       <div className="w-1/2 h-full flex flex-col items-center justify-center gap-8 ">
         <div className="flex w-1/2 ">
-          <h1 className="text-3xl text-[#171923] font-bold   ">Sign in</h1>
+          <h1 className="text-3xl text-[#171923] font-bold">Sign in</h1>
         </div>
         <form className="flex flex-col gap-4 w-1/2">
           <div className="flex flex-col gap-2">
@@ -74,4 +74,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default SignIn;
