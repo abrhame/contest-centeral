@@ -59,7 +59,7 @@ const ParticipantsHeader = [
 
 const ContestDetail = () => {
     return (
-        <div className='bg-[#F6F6F9] h-screen flex '>
+        <div className='bg-[#F6F6F9] h-screen flex flex-col-reverse md:flex-row'>
             <ParticipantsTable data={participants} headers={ParticipantsHeader} />
             <div >
                 <Chart />

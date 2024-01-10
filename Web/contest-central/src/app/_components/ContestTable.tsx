@@ -25,7 +25,7 @@ type Prop = {
 
 const ContestTable = ({ data, headers }: Prop) => {
     return (
-        <div className="mx-2 my-10 lg:m-10 overflow-x-auto sm:rounded-lg">
+        <div className="mx-2 my-10 lg:m-10 overflow-x-auto sm:rounded-lg font-poppins">
             <ContestFilter />
             <table className="w-full border rounded-lg text-sm text-left rtl:text-right text-gray-500 shadow-md">
                 <thead className="text-xs text-[#6B7280] uppercase bg-gray-50">
