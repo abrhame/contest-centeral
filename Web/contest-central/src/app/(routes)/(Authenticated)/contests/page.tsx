@@ -51,7 +51,7 @@ const ContestHeaders = [
 
 const page = () => {
     return (
-        <div className='bg-[#F6F6F9] h-screen relative '>
+        <div className='h-screen relative '>
             <ContestTable data={contests} headers={ContestHeaders} />
         </div>
     )
