@@ -23,7 +23,7 @@ const menuItems = [
   {
     name: "Contest",
     Icon: <FaRankingStar />,
-    url: "/contest",
+    url: "/contests",
   },
   {
     name: "Users",
