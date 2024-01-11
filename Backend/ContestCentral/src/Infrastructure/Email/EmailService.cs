@@ -7,15 +7,14 @@ using MimeKit;
 using MimeKit.Text;
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Email;
 
 public class EmailService : IEmailService {
     private readonly EmailSettings _emailSettings;
-    private readonly Microsoft.Extensions.Logging.ILogger _logger;
+    private readonly ILogger _logger;
 
-    public EmailService(IOptions<EmailSettings> emailSettings, Microsoft.Extensions.Logging.ILogger logger) {
+    public EmailService(IOptions<EmailSettings> emailSettings, ILogger logger) {
         _emailSettings = emailSettings.Value;
         _logger = logger;
     }
@@ -24,7 +23,7 @@ public class EmailService : IEmailService {
         try {
             using var smtp = new SmtpClient();
             await smtp.ConnectAsync(_emailSettings.Host, _emailSettings.Port, SecureSocketOptions.StartTls);
-            await smtp.AuthenticateAsync(_emailSettings.DefaultFromEmail, _emailSettings.Password);
+            await smtp.AuthenticateAsync(_emailSettings.UserName, _emailSettings.Password);
 
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_emailSettings.DefaultFromEmail));
@@ -40,7 +39,7 @@ public class EmailService : IEmailService {
 
             return Result.SuccessResult("Email sent successfully");
         } catch (Exception ex) {
-            _logger.LogError(ex.Message);
+            _logger.Error("Error sending email", ex);
             return Result.FailureResult(new string[] { ex.Message });
         }
     }
