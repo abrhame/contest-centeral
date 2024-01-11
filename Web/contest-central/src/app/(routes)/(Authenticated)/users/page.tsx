@@ -1,7 +1,7 @@
 "use client";
 
-import CustomModal from "@/app/_components/Modal";
-import React from "react";
+import Modal from "@/app/_components/modal/Modal";
+import React, { useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import { RiEqualizerLine } from "react-icons/ri";
@@ -9,7 +9,7 @@ import { RiEqualizerLine } from "react-icons/ri";
 type Props = {};
 
 export default function page({}: Props) {
-  const [modalIsOpen, setModalIsOpen] = React.useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -36,14 +36,18 @@ export default function page({}: Props) {
             <span className="font-medium">Filter</span>
             <IoIosArrowForward className="text-2xl font-semibold" />
           </button>
-          <button className="border border-primaryBlue-400 border-x-1 py-1.5 px-2 text-base bg-primaryBlue-400 text-white rounded-md font-medium">
+          <button
+            className="border border-primaryBlue-400 border-x-1 py-1.5 px-2 text-base bg-primaryBlue-400 text-white rounded-md font-medium cursor-pointer"
+            onClick={openModal}
+          >
             Create User
           </button>
+          {modalIsOpen && <Modal onClose={closeModal} />}
         </div>
       </div>
 
       {/* Table */}
-      <div>Table Data</div>
+      <div></div>
     </section>
   );
 }
