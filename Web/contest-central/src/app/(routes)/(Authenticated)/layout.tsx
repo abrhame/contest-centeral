@@ -63,7 +63,7 @@ export default function LoggedInLayout({ children }: Props) {
           <SideNav />
         </div>
         <div className="lg:col-span-5 col-span-full relative top-0 right-0 lg:px-3">
-          <div className="z-50 w-full flex items-center justify-between lg:block sticky top-0 left-0 bg-white">
+          <div className="z-10 w-full flex items-center justify-between lg:block sticky top-0 left-0 bg-white">
             <button onClick={toggleSidebar} className="lg:hidden z-50">
               {!isSidebarOpen && (
                 <TiThMenu className="text-3xl pl-2 text-slate-400" />
@@ -73,7 +73,7 @@ export default function LoggedInLayout({ children }: Props) {
               <TopNav />
             </div>
           </div>
-          <div className="w-full h-screen px-3 py-2 bg-[#f5f7fd81]">
+          <div className="w-full h-screen overflow-y-auto px-3 py-2 bg-[#f5f7fd81]">
             {children}
           </div>
         </div>
