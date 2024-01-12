@@ -15,6 +15,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { IoNotificationsOutline, IoSettingsOutline } from "react-icons/io5";
 import Image from "next/image";
 import { RiLogoutBoxRLine } from "react-icons/ri";
+import Link from "next/link";
 
 type Props = {};
 
@@ -28,6 +29,19 @@ const TopNav = (props: Props) => {
   const handleClick = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     e.preventDefault();
     router.push("/");
+  };
+
+  const handleLogout = () => {
+    // logout
+    router.push("/signin");
+  };
+
+  const handleHelp = () => {
+    // help
+  };
+  const routeToProfile = () => {
+    router.push("/profile");
+    setIsProfileDropdownOpen(false);
   };
 
   const toggleProfileDropdown = () => {
@@ -95,7 +109,10 @@ const TopNav = (props: Props) => {
             {isProfileDropdownOpen && (
               <div className="absolute right-6 top-16 py-2 px-3 pr-1 mt-2 w-64 border border-gray-300 bg-white shadow-lg rounded-lg overflow-hidden z-10 transition-transform origin-top duration-300 ease-in-out">
                 <div className="py-1">
-                  <button className="flex items-center gap-x-4 px-4 py-2 text-gray-600 hover:bg-primaryBlue-300 rounded-md hover:text-white w-full text-left">
+                  <button
+                    className="flex items-center gap-x-4 px-4 py-2 text-gray-600 hover:bg-primaryBlue-300 rounded-md hover:text-white w-full text-left"
+                    onClick={routeToProfile}
+                  >
                     <CgProfile className="text-xl " />
                     <span className="">Profile</span>
                   </button>
@@ -107,7 +124,10 @@ const TopNav = (props: Props) => {
                     <FiHelpCircle className="text-xl font-semibold" />
                     <span>Help Center</span>
                   </button>
-                  <button className="flex items-center gap-x-4 px-4 py-2 text-gray-600 hover:bg-primaryBlue-300 rounded-md hover:text-white w-full text-left">
+                  <button
+                    className="flex items-center gap-x-4 px-4 py-2 text-gray-600 hover:bg-primaryBlue-300 rounded-md hover:text-white w-full text-left"
+                    onClick={handleLogout}
+                  >
                     <IoMdLogOut className="text-xl font-medium" />
                     <span>Log Out</span>
                   </button>

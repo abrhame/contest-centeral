@@ -1,5 +1,6 @@
 "use client";
 
+import UsersTable from "@/app/_components/UsersTable";
 import Modal from "@/app/_components/modal/Modal";
 import React, { useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
@@ -7,6 +8,101 @@ import { IoSearchOutline } from "react-icons/io5";
 import { RiEqualizerLine } from "react-icons/ri";
 
 type Props = {};
+const tableData = [
+  {
+    name: "Ibsa Abrham",
+    email: "ibsa.abrham@a2sv.com",
+    role: "Head of Education",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "Ibsa Abrham",
+    email: "ibsa.abrham@a2sv.com",
+    role: "Head of Education",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "Ibsa Abrham",
+    email: "ibsa.abrham@a2sv.com",
+    role: "Head of Education",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "Ibsa Abrham",
+    email: "ibsa.abrham@a2sv.com",
+    role: "Head of Education",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "Ibsa Abrham",
+    email: "ibsa.abrham@a2sv.com",
+    role: "Head of Education",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "Ibsa Abrham",
+    email: "ibsa.abrham@a2sv.com",
+    role: "Head of Education",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "Ibsa Abrham",
+    email: "ibsa.abrham@a2sv.com",
+    role: "Head of Education",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "John Doe",
+    email: "HlT3H@example.com",
+    role: "Contest Creater",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "John Doe",
+    email: "HlT3H@example.com",
+    role: "Contest Creater",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "John Doe",
+    email: "HlT3H@example.com",
+    role: "Contest Creater",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "John Doe",
+    email: "HlT3H@example.com",
+    role: "Contest Creater",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "John Doe",
+    email: "HlT3H@example.com",
+    role: "Contest Creater",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+  {
+    name: "John Doe",
+    email: "HlT3H@example.com",
+    role: "Contest Creater",
+    emailVerfication: "Head of Education",
+    action: "",
+  },
+];
+
+const tableHeaders = ["Name", "Email", "Role", "Email Verification", "Actions"];
 
 export default function page({}: Props) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -21,10 +117,11 @@ export default function page({}: Props) {
 
   return (
     <section>
-      <div className="flex items-center justify-between py-2 px-6">
+      <div className="flex items-center justify-between py-2 pt-6 pb-2 px-6 w-4/5">
         <div className="relative">
           <input
             type="text"
+            name="search"
             placeholder="Search"
             className="border border-primaryGray-300 pl-10 px-3 py-1.5 rounded-md outline-none focus:border-primaryBlue-400"
           />
@@ -42,12 +139,13 @@ export default function page({}: Props) {
           >
             Create User
           </button>
-          {modalIsOpen && <Modal onClose={closeModal} />}
+          {modalIsOpen && <Modal onClose={closeModal} isOpen={modalIsOpen} />}
         </div>
       </div>
 
-      {/* Table */}
-      <div></div>
+      <div>
+        <UsersTable data={tableData} headers={tableHeaders} />
+      </div>
     </section>
   );
 }

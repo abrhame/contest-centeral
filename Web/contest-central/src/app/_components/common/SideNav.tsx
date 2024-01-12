@@ -11,6 +11,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { Url } from "next/dist/shared/lib/router/router";
+import Router from "next/router";
 
 type Props = {};
 
@@ -21,20 +22,20 @@ const menuItems = [
     url: "/dashboard",
   },
   {
-    name: "Contest",
+    name: "Contests",
     Icon: <FaRankingStar />,
     url: "/contests",
   },
   {
     name: "Users",
     Icon: <FaRegUser />,
-    url: "/groups",
+    url: "/users",
   },
-  {
-    name: "Settings",
-    Icon: <RiSettingsLine />,
-    url: "/settings",
-  },
+  // {
+  //   name: "Settings",
+  //   Icon: <RiSettingsLine />,
+  //   url: "/settings",
+  // },
   {
     name: "Leader Board",
     Icon: <MdOutlineLeaderboard />,
@@ -48,6 +49,12 @@ const menuItems = [
 ];
 
 const SideNav = (props: Props) => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // logout
+    router.push("/signin");
+  };
   const path = usePathname();
 
   return (
@@ -82,7 +89,10 @@ const SideNav = (props: Props) => {
             ))}
           </div>
           <div className="px-1 pb-10">
-            <button className="flex items-center space-x-4 py-1 px-6 w-44 cursor-pointer hover:bg-primaryBlue-300 transition duration-500 ease-in-out rounded-md hover:text-white">
+            <button
+              className="flex items-center space-x-4 py-1 px-6 w-44 cursor-pointer hover:bg-primaryBlue-300 transition duration-500 ease-in-out rounded-md hover:text-white"
+              onClick={handleLogout}
+            >
               <RiLogoutBoxRLine />
               <span>Logout</span>
             </button>
