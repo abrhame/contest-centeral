@@ -25,9 +25,33 @@ public static class InfrastructureServices {
         services.AddRepositories();
         services.AddEmailServices(configuration);
         services.AddAuthenticationServices(configuration);
+        services.AddCaching(configuration);
 
         return services;
     }
+
+
+    private static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration configuration) {
+        var Env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        var CacheConnection = Env == "Production" ? 
+            Environment.GetEnvironmentVariable("ContestCentralCacheConnection") : 
+            configuration.GetConnectionString("ContestCentralCacheConnection");
+
+        services.AddOutputCache(options => {
+                options.AddBasePolicy( opts => 
+                        opts.Expire(TimeSpan.FromMinutes(10))
+                );
+        });
+
+        services.AddStackExchangeRedisOutputCache(options => {
+            options.Configuration = CacheConnection; 
+            options.InstanceName = "ContestCentralRedisCache";
+        });
+
+        return services;
+    }
+
 
     private static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration) {
         var Env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
