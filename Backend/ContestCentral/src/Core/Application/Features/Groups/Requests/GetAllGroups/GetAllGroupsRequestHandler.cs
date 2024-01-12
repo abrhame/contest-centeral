@@ -21,6 +21,10 @@ public class GetAllGroupsRequestHandler : IRequestHandler<GetAllGroupsRequest, (
 
     public async Task<(Result, List<GroupResponseDto>)> Handle(GetAllGroupsRequest request, CancellationToken cancellationToken)
     {
+        // delay of 10 sec
+
+        await Task.Delay(10000);
+
         var groups = await _unitOfWork.GroupRepository.GetAllAsync();
 
         var response = _mapper.Map<List<GroupResponseDto>>(groups);
