@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 
+import '../../data/datasource/remote_data_source.dart';
 import '../contest_stats/contest_detail.dart';
 import '../contest_stats/floating_action.dart';
 
@@ -18,17 +19,39 @@ class _ContestListState extends State<ContestList> {
   late ScrollController verticalScrollController;
   // late ScrollController _horizontalScrollController;
   bool _showFab = true;
+  List<Map<dynamic, dynamic>> getContestsByFilterData = [];
+  int rowsCount = 0;
+  int columnsCount = 5; // Number of columns in the table
+  void getContestsByFilter() async {
+    try {
+      final getContestsByFilterSource = EducationSquadApiDataSource(
+          baseUrl: 'https://a2sv-contest-central-api.onrender.com');
+      final data = await getContestsByFilterSource.getContestsByFilter();
+      // print("==========> getContestsByFilter Data : $data");
+      setState(() {
+        getContestsByFilterData = data;
+
+        rowsCount = getContestsByFilterData.length;
+        print("==========> rowsCount : $rowsCount");
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Getting ContestsByFilter Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   void initState() {
     showingTooltip = -1;
     super.initState();
+    getContestsByFilter();
 
     verticalScrollController = ScrollController();
   }
-
-  final int rowsCount = 50; // Number of rows in the table
-  final int columnsCount = 5; // Number of columns in the table
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +109,7 @@ class _ContestListState extends State<ContestList> {
             ),
             CircleAvatar(
               radius: 15.0,
-              backgroundImage: NetworkImage(
-                  'https://th.bing.com/th/id/R.0f36a9b7563d5a0787b5661ce63f3ee8?rik=cJxNXWv6Gt5s8g&riu=http%3a%2f%2fadvantagebodylanguage.com%2fwp-content%2fuploads%2f2015%2f12%2fgewoman.jpg&ehk=nR1PFEO%2fHz1YZ3XLQsKWjtU3Ga%2boY%2f4NzLcCMXB3uYU%3d&risl=&pid=ImgRaw&r=0'),
-            ),
-            //  SizedBox(width:2,),
-            Icon(
-              Icons.expand_more,
-              color: Color.fromARGB(255, 41, 45, 50),
+              backgroundImage: AssetImage('assets/images/no_profile.png'),
             ),
             SizedBox(
               width: 20,
@@ -223,6 +240,7 @@ class _ContestListState extends State<ContestList> {
             ),
           ),
         ),
+      
         floatingActionButton: AnimatedSlide(
             duration: duration,
             offset: _showFab ? Offset.zero : const Offset(0, 2),
@@ -232,17 +250,17 @@ class _ContestListState extends State<ContestList> {
                 child: buildSpeedDial(context))));
   }
 
-  // Build the header widgets for the table
+// Modify the _buildHeaderWidgets method if needed
   List<Widget> _buildHeaderWidgets() {
     List<String> titles = [
       "Contest Name",
       "Questions",
       "Status",
-      "Attempts",
-      "Date"
+      "Start Time",
+      "Author"
     ];
     return [
-      for (var i = 0; i < columnsCount; i++)
+      for (var title in titles)
         Container(
           width: 110,
           height: 35.0,
@@ -252,7 +270,7 @@ class _ContestListState extends State<ContestList> {
               top: 5.0,
             ),
             child: Text(
-              " ${titles[i]}",
+              " $title",
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -264,8 +282,12 @@ class _ContestListState extends State<ContestList> {
     ];
   }
 
-  // Builds the fixed column
+// Modify the _buildFixedColumn method
   Widget _buildFixedColumn(BuildContext context, int index) {
+    final contest = getContestsByFilterData[index];
+    final status = contest['status'];
+    print("==========> Contest Name: ${contest['name']} status : $status");
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -280,16 +302,20 @@ class _ContestListState extends State<ContestList> {
         alignment: Alignment.center,
         child: Row(
           children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-              child: Icon(
-                Icons.check_circle_outline,
-                color: Color.fromARGB(207, 76, 175, 79),
-                size: 24,
-              ),
-            ),
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: status == 'FINISHED'
+                    ? const Icon(
+                        Icons.check_circle_outline,
+                        color: Color.fromARGB(207, 76, 175, 79),
+                        size: 24,
+                      )
+                    : const Icon(
+                        Icons.rotate_right,
+                        color: Color.fromARGB(255, 176, 186, 30),
+                      )),
             Text(
-              'Weekly Contest ${index + 1}',
+              contest['name'],
               style: const TextStyle(
                 fontSize: 14,
                 color: Color.fromARGB(255, 33, 33, 33),
@@ -301,23 +327,60 @@ class _ContestListState extends State<ContestList> {
     );
   }
 
-  // Builds the scrollable columns
+// Modify the _buildScrollableColumns method
   Widget _buildScrollableColumns(BuildContext context, int index) {
+    final contest = getContestsByFilterData[index];
+
     return Row(
       children: [
-        for (var i = 0; i < columnsCount; i++)
-          Container(
-            width: 100.0, // Adjust the width of the scrollable columns
-            height: 35.0,
-            alignment: Alignment.center,
-            child: Text(
-              'Data ${index + 1}-${i + 2}',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color.fromARGB(255, 107, 104, 104),
-              ),
+        Container(
+          width: 100.0, // Adjust the width of the scrollable columns
+          height: 35.0,
+          alignment: Alignment.center,
+          child: Text(
+            contest['questionsNumber'].toString(),
+            style: const TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 107, 104, 104),
             ),
           ),
+        ),
+        Container(
+          width: 100.0, // Adjust the width of the scrollable columns
+          height: 35.0,
+          alignment: Alignment.center,
+          child: Text(
+            contest['status'].toString(),
+            style: const TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 107, 104, 104),
+            ),
+          ),
+        ),
+        Container(
+          width: 100.0, // Adjust the width of the scrollable columns
+          height: 35.0,
+          alignment: Alignment.center,
+          child: Text(
+            contest['startTimeSeconds'].toString(),
+            style: const TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 107, 104, 104),
+            ),
+          ),
+        ),
+        Container(
+          width: 100.0, // Adjust the width of the scrollable columns
+          height: 35.0,
+          alignment: Alignment.center,
+          child: Text(
+            contest['preparedBy'].toString(),
+            style: const TextStyle(
+              fontSize: 14,
+              color: Color.fromARGB(255, 107, 104, 104),
+            ),
+          ),
+        ),
       ],
     );
   }

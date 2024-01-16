@@ -1,7 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../education_squad/presentation/dashboard/home.dart';
+import '../../data/datasources/remote_data_source.dart';
+import 'signup.dart';
 // import '../../../education_squad/presentation/dashboard/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,10 +16,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-  }
+  bool isLoading = false;
+  bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -73,18 +75,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       child: const Text(
                         'Forgot Password?',
-                        // under line text
-
                         style: TextStyle(
                           color: Colors.blue,
-                          // decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              //  const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Container(
@@ -94,28 +92,68 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 71, 109, 234),
                       shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(20)),
+                          borderRadius: BorderRadius.circular(20)),
                     ),
-                    child: const Text(
-                      "Sign In",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () {
-                      // ContestDetail()
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ESquadDashBoard(),
-                        ),
-                      );
+                    child: isLoading
+                        ? const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            "Sign In",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold),
+                          ),
+                    onPressed: () async {
+                      if (_validateInputs()) {
+                        // Show loading indicator
+                        setState(() {
+                          isLoading = true;
+                        });
+
+                        try {
+                          final userApiDataSource = UserApiDataSource(
+                              baseUrl:
+                                  'https://a2sv-contest-central-api.onrender.com');
+                          final userData = await userApiDataSource.loginUser({
+                            'email': _emailController.text,
+                            'password': _passwordController.text,
+                          });
+
+                          // Hide loading indicator
+                          setState(() {
+                            isLoading = false;
+                          });
+
+                          // Navigate to the next route
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ESquadDashBoard(),
+                            ),
+                          );
+                        } catch (e) {
+                          // Handle error and display in SnackBar
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+
+                          // Hide loading indicator
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      }
                     },
                   ),
                 ),
               ),
-
               const SizedBox(height: 3),
               // ----- OR ----- text with divider
               const Padding(
@@ -145,6 +183,49 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               //  const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Container(
+                  color: Colors.white,
+                  width: double.infinity,
+                  height: 45,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      // SignUpScreen()
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUpScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      surfaceTintColor: const Color(0xff212121),
+                      foregroundColor: const Color(0xff212121),
+                      backgroundColor: const Color(0xff212121),
+                      shadowColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: const BorderSide(
+                          color: Color.fromARGB(
+                              255, 236, 236, 236), // Grey border color
+                        ),
+                      ),
+                    ),
+                    // email icon
+                    icon: const Icon(
+                      Icons.email,
+                      color: Color(0xffDFE2E6),
+                    ),
+                    label: const Text('Sign up with Email',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 233, 233, 233),
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
+
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Container(
@@ -189,8 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildTextField(String label, IconData icon) {
-    return // Fllname label and input field
-        Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,6 +290,17 @@ class _LoginScreenState extends State<LoginScreen> {
             height: 40,
             child: TextFormField(
               controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a valid email';
+                }
+                if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+                    .hasMatch(value)) {
+                  return 'Please enter a valid email';
+                }
+                return null;
+              },
               decoration: const InputDecoration(
                 hintText: 'example@gmail.com',
                 enabledBorder: OutlineInputBorder(
@@ -247,18 +338,16 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
-    // Fllname label an;
   }
 
   Widget _buildPasswordField() {
-    return // Password label and input field
-        Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Passsword',
+            'Password',
             style: TextStyle(
               fontSize: 19,
               color: Colors.grey,
@@ -272,10 +361,16 @@ class _LoginScreenState extends State<LoginScreen> {
             height: 40,
             child: TextFormField(
               controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                hintText: "Choose a password",
-                enabledBorder: OutlineInputBorder(
+              obscureText: !isPasswordVisible,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a password';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                hintText: "Enter password",
+                enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Color(0xffDFE2E6),
                   ),
@@ -283,7 +378,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Radius.circular(10.0),
                   ),
                 ),
-                focusedBorder: OutlineInputBorder(
+                focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Color(0xffDFE2E6),
                   ),
@@ -294,22 +389,60 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 filled: true,
                 fillColor: Colors.white,
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.vpn_key,
                   color: Color(0xffDFE2E6),
                 ),
-                hintStyle: TextStyle(
+                hintStyle: const TextStyle(
                   color: Color(0xffDFE2E6),
                   // Adjust the top padding as needed
                   height: 1.5, // Increase this value to add more top padding
                 ),
-                contentPadding: EdgeInsets.symmetric(
-                    vertical: 1.0), // Adjust the vertical padding as needed
+                contentPadding: const EdgeInsets.symmetric(vertical: 1.0), //
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: const Color(0xffDFE2E6),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isPasswordVisible = !isPasswordVisible;
+                    });
+                  },
+                ),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  bool _validateInputs() {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter both email and password'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    }
+
+    if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+        .hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid email'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    }
+
+    return true;
   }
 }

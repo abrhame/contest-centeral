@@ -1,10 +1,9 @@
-import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:restart_app/restart_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../contest_list/contest_list.dart';
-import '../contest_stats/contest_detail.dart';
+import '../dashboard/leaders_board/leadersboard.dart';
 
 class EndDrawers extends StatefulWidget {
   const EndDrawers({super.key});
@@ -17,6 +16,11 @@ class _EndDrawersState extends State<EndDrawers> {
   Future<void> clearPreference(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove(key);
+  }
+
+  Future<void> clearToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
   }
 
   @override
@@ -70,24 +74,6 @@ class _EndDrawersState extends State<EndDrawers> {
               );
             },
           ),
-          // ListTile(
-          //   leading: const Icon(
-          //     Icons.privacy_tip,
-          //     color: Color.fromARGB(255, 63, 66, 80),
-          //   ),
-          //   title: const Text(
-          //     'Privacy',
-          //     style: TextStyle(
-          //       fontFamily: 'Urbanist-Bold',
-          //       fontSize: 16,
-          //     ),
-          //   ),
-          //   onTap: () {
-          //     // Handle Privacy action
-          //     Navigator.pop(context); // Close the drawer
-          //   },
-          // ),
-
           ListTile(
             leading: const Icon(
               Icons.group,
@@ -138,11 +124,14 @@ class _EndDrawersState extends State<EndDrawers> {
               ),
             ),
             onTap: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => FAQScreen(),
-              //   ),
-              // );
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => LeadersBoard(),
+                ),
+              );
+              // hide the drawer
+              // Navigator.pop(context);
             },
           ),
           ListTile(
@@ -165,7 +154,6 @@ class _EndDrawersState extends State<EndDrawers> {
               // );
             },
           ),
-
           ListTile(
             leading: const Icon(
               Icons.logout,
@@ -179,11 +167,12 @@ class _EndDrawersState extends State<EndDrawers> {
               ),
             ),
             onTap: () async {
-              // await clearPreference('visited_before');
-              // // exit(0);
-              // Restart.restartApp();
+              // Clear token from SharedPreferences
+              await clearToken();
+
+              Restart.restartApp();
             },
-          ),
+          )
         ],
       ),
     );
