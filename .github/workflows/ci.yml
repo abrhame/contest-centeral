@@ -21,8 +21,12 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Restore dependencies
+        working-directory: Backend/ContestCentral
         run: dotnet restore
       - name: Build
+        working-directory: Backend/ContestCentral
         run: dotnet build --no-restore
       - name: Test
+        working-directory: Backend/ContestCentral
         run: dotnet test --no-build --verbosity normal
+

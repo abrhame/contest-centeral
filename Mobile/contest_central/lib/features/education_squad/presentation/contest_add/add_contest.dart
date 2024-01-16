@@ -492,6 +492,7 @@ class _AddContestState extends State<AddContest> {
                         ),
                       )
                       .toList()),
+
               const SizedBox(
                 height: 20,
               ),

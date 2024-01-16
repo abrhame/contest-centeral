@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "contest_central",
+            "cwd": "Mobile\\contest_central",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "contest_central (profile mode)",
+            "cwd": "Mobile\\contest_central",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "contest_central (release mode)",
+            "cwd": "Mobile\\contest_central",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
