@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/utils/img.dart';
 import 'card_data.dart';
@@ -10,6 +11,23 @@ class ProfilePolygonRoute extends StatefulWidget {
 
   @override
   ProfilePolygonRouteState createState() => ProfilePolygonRouteState();
+}
+
+String name = "Nahom";
+
+// get name from shared preference
+Future<String> getName() async {
+  final prefs = await SharedPreferences.getInstance();
+  final name = prefs.getString('firstName');
+  print("name: $name");
+  return name!;
+}
+
+@override
+void initState() {
+  getName().then((value) {
+    name = value;
+  });
 }
 
 class ProfilePolygonRouteState extends State<ProfilePolygonRoute> {
@@ -63,8 +81,9 @@ class ProfilePolygonRouteState extends State<ProfilePolygonRoute> {
                     radius: 50,
                     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     child: CircleAvatar(
-                      radius: 48,
-                      backgroundImage: AssetImage(Img.get("image 1.png")),
+                      radius: 48.0,
+                      backgroundImage:
+                          AssetImage('assets/images/no_profile.png'),
                     ),
                   ),
                 ),
@@ -152,13 +171,13 @@ class ProfilePolygonRouteState extends State<ProfilePolygonRoute> {
                           children: [
                             cardData(
                               "Name",
-                              "Anima Agarwal",
+                              "Nahom",
                               "Edit",
                               () => print("Edit"),
                             ),
                             cardData(
                               "Email",
-                              "geme@gmail.com",
+                              "nhabtamu42@gmail.com",
                               "Edit",
                               () => print("Edit"),
                             ),

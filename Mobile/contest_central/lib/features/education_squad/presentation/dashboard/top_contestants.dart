@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/colors.dart';
 import 'clist.dart';
 
 class TopContestants extends StatefulWidget {
@@ -79,28 +78,13 @@ class _TopContestantsState extends State<TopContestants> {
             CLists(
                 rank: '1',
                 svgPath: firstMedal,
-                name: "john Doe",
+                name: "Mikeyas",
                 percent: '80%'),
             CLists(
                 rank: '2',
                 svgPath: secondMedal,
-                name: "john Doe",
-                percent: '80%'),
-            CLists(
-                rank: '3',
-                svgPath: thirdMedal,
-                name: "john Doe",
-                percent: '80%'),
-            CLists(
-                rank: '4',
-                svgPath: fourthMedal,
-                name: "john Doe",
-                percent: '80%'),
-            CLists(
-                rank: '5',
-                svgPath: fifthMedal,
-                name: "john Doe",
-                percent: '80%')
+                name: "haymanotdemis",
+                percent: '60%'),
           ],
         ),
       ),

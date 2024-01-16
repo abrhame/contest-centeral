@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ScrollableTableWithButton extends StatefulWidget {
+  final List<Map<dynamic, dynamic>> getContestsByFilterData;
+
+  const ScrollableTableWithButton({
+    Key? key,
+    required this.getContestsByFilterData,
+  }) : super(key: key);
+
   @override
   _ScrollableTableWithButtonState createState() =>
       _ScrollableTableWithButtonState();
@@ -18,19 +25,17 @@ class _ScrollableTableWithButtonState extends State<ScrollableTableWithButton> {
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
-
-              borderRadius:
-                  BorderRadius.circular(8.0), // Set your desired border radius
+              borderRadius: BorderRadius.circular(8.0),
               boxShadow: const [
                 BoxShadow(
-                  color: Color.fromRGBO(149, 157, 165, 0.2), // Shadow color
-                  offset: Offset(0, 8), // Offset in the x, y direction
-                  blurRadius: 24.0, // Blur radius
+                  color: Color.fromRGBO(149, 157, 165, 0.2),
+                  offset: Offset(0, 8),
+                  blurRadius: 24.0,
                 ),
               ],
             ),
             child: SizedBox(
-              width: double.infinity, // Set width to fill available space
+              width: double.infinity,
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
@@ -40,100 +45,53 @@ class _ScrollableTableWithButtonState extends State<ScrollableTableWithButton> {
                   columnSpacing: 30,
                   columns: const [
                     DataColumn(
-                        label: Text(
-                      'CONTEST NAME',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color.fromARGB(255, 107, 104, 104),
+                      label: Text(
+                        'CONTEST NAME',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 107, 104, 104),
+                        ),
                       ),
-                    )),
+                    ),
                     DataColumn(
-                        label: Text(
-                      'DATE',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color.fromARGB(255, 107, 104, 104),
+                      label: Text(
+                        'DATE',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 107, 104, 104),
+                        ),
                       ),
-                    )),
+                    ),
                     DataColumn(
-                        label: Text(
-                      'STATUS',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color.fromARGB(255, 107, 104, 104),
+                      label: Text(
+                        'STATUS',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 107, 104, 104),
+                        ),
                       ),
-                    )),
-                    // Add more DataColumn as needed
+                    ),
                   ],
-                  rows: const [
-                    DataRow(cells: [
-                      DataCell(Text('Weekly Contest 1')),
-                      DataCell(Text('7 Nov,11:03')),
-                      DataCell(
-                        Icon(
-                          Icons.check_circle_outline_rounded,
-                          color: Colors.green,
-                        ),
-                      ),
-                      // Add more DataCells as needed
-                    ]),
-                    DataRow(cells: [
-                      DataCell(Text('Weekly Contest 1')),
-                      DataCell(Text('7 Nov,11:03')),
-                      DataCell(
-                        Icon(
-                          Icons.check_circle_outline_rounded,
-                          color: Colors.green,
-                        ),
-                      ),
-                      // Add more DataCells as needed
-                    ]),
-                    DataRow(cells: [
-                      DataCell(Text('Weekly Contest 1')),
-                      DataCell(Text('7 Nov,11:03')),
-                      DataCell(
-                        Icon(
-                          Icons.check_circle_outline_rounded,
-                          color: Colors.green,
-                        ),
-                      ),
-                      // Add more DataCells as needed
-                    ]),
-                    DataRow(cells: [
-                      DataCell(Text('Weekly Contest 1')),
-                      DataCell(Text('7 Nov,11:03')),
-                      DataCell(
-                        Icon(
-                          Icons.check_circle_outline_rounded,
-                          color: Colors.green,
-                        ),
-                      ),
-                      // Add more DataCells as needed
-                    ]),
-                    DataRow(cells: [
-                      DataCell(Text('Weekly Contest 1')),
-                      DataCell(Text('7 Nov,11:03')),
-                      DataCell(
-                        Icon(
-                          Icons.check_circle_outline_rounded,
-                          color: Colors.green,
-                        ),
-                      ),
-                      // Add more DataCells as needed
-                    ]),
-                    DataRow(cells: [
-                      DataCell(Text('Weekly Contest 1')),
-                      DataCell(Text('7 Nov,11:03')),
-                      DataCell(
-                        Icon(
-                          Icons.check_circle_outline_rounded,
-                          color: Colors.green,
-                        ),
-                      ),
-                      // Add more DataCells as needed
-                    ]),
-                    // Add more DataRow as needed
-                  ],
+                  rows: List.generate(widget.getContestsByFilterData.length,
+                      (index) {
+                    final contest = widget.getContestsByFilterData[index];
+                    final status = contest['status'];
+
+                    return DataRow(cells: [
+                      DataCell(Text(contest['name'].toString())),
+                      const DataCell(
+                          Text('7 Nov,11:03')), // Replace with actual date
+                      DataCell(status == 'FINISHED'
+                          ? const Icon(
+                              Icons.check_circle_outline_rounded,
+                              color: Colors.green,
+                            )
+                          : const Icon(
+                              Icons.rotate_right,
+                              color: Color.fromARGB(255, 176, 186, 30),
+                            )),
+                    ]);
+                  }),
                 ),
               ),
             ),
